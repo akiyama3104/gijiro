@@ -14,9 +14,10 @@ class Proceeding extends AppModel{
     public $filterArgs = array(
         "place"=>array("type"=>"like"),
         "agenda"=>array("type"=>"like"),
-//        "start_time"=> array("type"=>"like"),
-        "user_id" => array("type" => "value"),
-        "title" => array("type" => "like"),
+
+//        "start_time"=> array("type"=>"like")
+        "title" => array("type" => "like" )//,'connectorAnd' => '+', 'connectorOr' => ','),
+//        "type"=>array("type"=>"checkbox")
     );
     public $recursive = 2;
     

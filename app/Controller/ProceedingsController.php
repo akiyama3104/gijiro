@@ -99,7 +99,6 @@ class ProceedingsController extends AppController{
             throw new MethodNotAllowedException();
         }
         if ($this->request->is("post")){
-
             if($this->Proceeding->delete($id)){
 
                 $this->Session->setFlash("削除しました。");

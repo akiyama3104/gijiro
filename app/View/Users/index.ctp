@@ -17,9 +17,13 @@
 
 <div class="span3">
     <div class="well" style="margin-top:20px;">
-        <?php echo $this->Form->create("Proceeding", array("controller"=>"users","action"=>"index")); ?>
+        <?php echo $this->Form->create("Proceeding", array("url"=>array("controller"=>"users","action"=>"index"))); ?>
         <fieldset>
+            <span>議題：</span>
             <?=$this->Form->input("Proceeding.title");?>
+<!--            <span>会議種類：</span>-->
+<!--            --><?//=$this->Form->input("Proceeding.type",array("options" => array("inner"=>"社内","outer"=>"社外","other"=>"その他"),"multiple"=>"checkbox"));?>
+
             <legend>検索</legend>
         </fieldset>
         <?php echo $this->Form->end("検索"); ?>
