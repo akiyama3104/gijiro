@@ -10,15 +10,15 @@ App::uses("AppController","Controller");
 class ProceedingsController extends AppController{
     public $helpers =array("Html","Form" );
     public $components=array("JoinProceedings");
-
+    public $uses=array("Proceeding","User");
 
     public function  add($id=null){
-//        $this->loadModel("User");
+
         //投稿者を持ってくる
         $this->set("id",$id);
 
         if ( $this->request->is("post")){
-            $this->loadModel("Proceeding");
+
 
 
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
@@ -31,7 +31,7 @@ class ProceedingsController extends AppController{
         }
     }
     public  function view($id=null){
-        $this->loadModel("Proceeding");
+
         $this->Proceeding->id=$id;
 //        $this->Proceeding->recursive=2;
 //        $this->Proceeding->unbindModel(
@@ -68,7 +68,7 @@ class ProceedingsController extends AppController{
 
     }
     public function edit($id=null){
-        $this->loadModel("Proceeding");
+
 
 
         $this->Proceeding->id=$id;
@@ -99,14 +99,9 @@ class ProceedingsController extends AppController{
             throw new MethodNotAllowedException();
         }
         if ($this->request->is("post")){
-            $this->loadModel("Proceeding");
-            if($this->Proceeding->delete($id)){
-//                $this->autoRender=false;
-//                $this->autoLayout=false;
-//                $response = array("id"=>$id);
 
-//                $this->header("Content-Type: application/json");
-//                echo json_encode($response);
+            if($this->Proceeding->delete($id)){
+
                 $this->Session->setFlash("削除しました。");
 
             }else{

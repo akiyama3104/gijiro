@@ -35,7 +35,30 @@
     <li>次回開催時間：<?=$this->Form->input("next_start",$dateOption);?>：～<?=$this->Form->input("next_end",$dateOption);?></li>
     <li>次回開催場所：<?=$this->Form->input("next_place");?></li>
     <li>補足<?=$this->Form->input("suppl");?></li>
+    <li>会議内容：<!--        暫定処置-->
 
+
+        <ul>
+            <?php for($i=0; $i<3; $i++):?>
+
+
+                <li>見出し：<?= $this->Form->input("Heading.".$i.".heading_name");?>
+
+                    <?=$this->Form->hidden("Heading.".$i.".id");//更新するため主キー設定?>
+
+                    <ul>
+                        <?php for( $j=0;$j<3;$j++):?>
+                            <li>
+
+                                <?= $this->Form->input("Heading.".$i.".Content.".$j.".content");?>
+                                <?=$this->Form->hidden("Heading.".$i.".Content.".$j.".id");//更新するため主キー設定?>
+                                <?=$this->Form->input("Heading.".$i.".Content.".$j.".status",array("options"=>array("fixed"=>"決定","task"=>"課題"),"type"=>"radio"));?>
+                            </li>
+                        <?endfor;?>
+                    </ul>
+                </li>
+            <?endfor;?>
+        </ul>
     <?=$this->Form->hidden("user_id",array("value"=>$id));?>
 
     <li><?= $this->Form->end("議事録開始！");?></li>

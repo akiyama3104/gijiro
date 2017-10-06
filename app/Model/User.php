@@ -7,7 +7,7 @@
  */
 App::uses("AppModel","Model");
 class  User extends  AppModel{
-//    public $hasMany = "Proceeding";
+//  public $hasMany = "Proceeding";
     public  $validate =array(
       "usrname" => array(
         array(
