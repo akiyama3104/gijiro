@@ -1,0 +1,49 @@
+ユーザーテーブル作成
+create table users(
+id int unsigned auto_increment primary key,
+username varchar(255),
+password varchar(255)
+);
+
+
+議事録テーブル作成
+create table proceedings(
+id int unsigned auto_increment primary key,
+title varchar(255),
+start_time datetime default null,
+end_time datetime default null,
+next_start datetime default null,
+next_end datetime default null,
+place varchar(255),
+next_place varchar(255),
+agenda text,
+type enum('inner','outer','other'),
+suppl text,
+user_id,
+created datetime default null,
+modified datetime default null
+);
+
+議事録見出しテーブル作成
+create table headings(
+id int unsigned auto_increment primary key,
+heading_name varchar(255),
+proceeding_id int
+);
+
+create table contents(
+id int unsigned auto_increment primary key,
+contents text,
+status enum("fixed","task","other"),
+heading_id int
+
+);
+
+参加者テーブル作成
+create table attenders(
+
+id int unsigned auto_increment primary key,
+proceeding_id int,
+name varchar(255),
+belongs varchar(255)
+);
