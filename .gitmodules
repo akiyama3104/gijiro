@@ -1,0 +1,9 @@
+[submodule "app/Plugin/Migrations"]
+	path = app/Plugin/Migrations
+	url = git://github.com/CakeDC/migrations.git
+[submodule "app/Plugin/TwitterBootstrap"]
+	path = app/Plugin/TwitterBootstrap
+	url = git://github.com/slywalker/TwitterBootstrap
+[submodule "app/Plugin/Search"]
+	path = app/Plugin/Search
+	url = git://github.com/CakeDC/search.git

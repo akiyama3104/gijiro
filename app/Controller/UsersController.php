@@ -11,6 +11,12 @@ class UsersController extends AppController{
 
     public $components =array("Session","Auth","JoinProceedings"); //Authコンポーネント読み込み
     public $helpers = array('Html','Form');
+    public $paginate = array(
+        "limit"=> 10,
+        "order"=> array(
+            "Proceeding.start_time" => "asc"
+        )
+    );
     public function beforeFilter(){//どのページでも共通してこの処理を行う
 
         parent::beforeFilter();//親もbeforeFilterを使えるようにする

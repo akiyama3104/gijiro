@@ -16,6 +16,8 @@
 
 $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
 $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,6 +26,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<title>
 		<?php echo $cakeDescription ?>:
 		<?php echo $this->fetch('title'); ?>
+
+
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
@@ -33,6 +37,9 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
+    echo $this->Html->css('bootstrap');
+    echo $this->Html->css('bootstrap-responsive');
+    echo $this->Html->script('bootstrap');
 	?>
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"

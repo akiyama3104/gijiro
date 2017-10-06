@@ -72,8 +72,10 @@ Cache::config('default', array('engine' => 'File'));
  *
  * Configure::write('I18n.preferApp', true);
  */
-//CakePlugin::load(‘DebugKit’);
-CakePlugin::loadAll();
+
+// プラグインのロード設定を記述
+CakePlugin::load(array('TwitterBootstrap', 'Migrations', 'Search', 'DebugKit'));
+
 /**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter. By default CakePHP bundles two filters:
  *
