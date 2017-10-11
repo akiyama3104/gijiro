@@ -8,10 +8,20 @@
 App::uses("AppController","Controller");
 //App::uses("Pa")
 class UsersController extends AppController{
-    public $uses=array("Proceeding","User");
-    public $components =array("Session","Auth","Search.Prg","Paginator");
+    public $uses=array("Proceeding","User","Attender");
+    public $components =array(
+        "Session", 
+        "Auth",
+        "Paginator",   
+        "Search.Prg" => array(
+              "commonProcess" => array(
+                  "paramType" => "querystring",
+                  "filterEmpty" =>  true,
+              )
+        )
+    );
     public $presetVars=true;
-    public $helpers = array('Html','Form');
+    public $helpers = array("Html","Form","Text");
     public $paginate = array(
         "limit"=> 10,
 
@@ -25,6 +35,7 @@ class UsersController extends AppController{
 
         //未ログイン状態であると、ログイン画面、登録画面しか行けないようにする
         $this->Auth->allow("register","login");
+        $this->set("title_for_layout","gijiro!");
     }
 
     //ログイン後のリダイレクトページ
@@ -34,15 +45,14 @@ class UsersController extends AppController{
 
         $this->Prg->commonProcess();//検索データのバリデーション
         $conditions=$this->Proceeding->parseCriteria($this->passedArgs);//検索条件の設定
-        $this->set("paginate",$this->paginate);
-        $this->set("user",$user);
         $this->Proceeding->unbindModel(array("hasMany"=>array("Heading")));
-
-        if (!empty($this->request->data['Proceeding']['type'])) {
-                unset($this->request->data['Proceeding']['type']);
+        if(isset($conditions["OR"][0])){
+            $highlight_word=$conditions["OR"][0];
         }
-        $this->set('proceedings', $this->Paginator->paginate($this->Proceeding,$conditions));
-        $this->set("title_for_layout","gijiro!");
+        $proceedings=$this->Paginator->paginate($this->Proceeding,$conditions);
+        $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
+        $this->set(compact("proceedings","user","conditions","user_id") );
+
     }
     public function register(){
         //reqestがpostデータ&&ユーザー追加成功したら

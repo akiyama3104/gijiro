@@ -8,7 +8,10 @@
 App::uses('AppModel', 'Model');
 class Attender extends AppModel{
 
-//    public  $belongsTo = "Proceeding";
+//    public  $belongsTo = array(
+//        "Proceeding"=>array("type"=>"inner",
+//            )
+//    );
     public $validate = array(
 
 

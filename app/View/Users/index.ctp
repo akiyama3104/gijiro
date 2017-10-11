@@ -12,21 +12,36 @@
 
 <!--投稿者であるユーザーidも送付する-->
 <?= $this->Html->link("投稿する",array("controller"=>"proceedings","action"=>"add",$user["id"])); ?>
-<?=debug($paginate);?>
-<?=debug($proceedings);?>
+<?php
+    $highlight_words=array();
+if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせるキーワード
+    $highlight=mb_convert_kana($this->request->data["Proceeding"]["keyword"] , "s");
+    $highlight_words=preg_split("/[\s,]+/",$highlight);
+}
+?>
+<?//=debug($proceedings);?>
+
+<?//=debug($proceedings);?>
+<?php $highlight_option=array("format"=>"<span class =\"bg-warning\">$1</span>");
+    //ハイライトの設定。現在bootstrapが効いていないが・・・。
+?>
 
 <div class="span3">
-    <div class="well" style="margin-top:20px;">
+    <div class="well" >
         <?php echo $this->Form->create("Proceeding", array("url"=>array("controller"=>"users","action"=>"index"))); ?>
         <fieldset>
-            <span>議題：</span>
-            <?=$this->Form->input("Proceeding.title");?>
+            <span></span>
+            <?=$this->Form->input("keyword");?>
+
+            <span>参加者：</span>
+            <?=$this->Form->input("user_id",array("label"=>"ユーザー名","class"=>"span12","options"=>$user_id,"empty"=>""));?>
 <!--            <span>会議種類：</span>-->
 <!--            --><?//=$this->Form->input("Proceeding.type",array("options" => array("inner"=>"社内","outer"=>"社外","other"=>"その他"),"multiple"=>"checkbox"));?>
-
+            <?php echo $this->Form->end("検索"); ?>
             <legend>検索</legend>
+            <?= $this->Html->link("詳細検索へ",array("controller"=>"Proceeding","action"=>"search"));?>
         </fieldset>
-        <?php echo $this->Form->end("検索"); ?>
+
     </div>
 </div>
 
@@ -49,18 +64,18 @@
 <?php foreach ($proceedings as $proceeding): ?>
 
 <section id="post_<?=h($proceeding["Proceeding"]["id"]) ?>">
-
-    <h2><?=$this->Html->link( $proceeding["Proceeding"]["title"],array("controller"=>"proceedings","action"=>"view",$proceeding["Proceeding"]["id"]));?></h2>
+        <?php $title=$this->Html->link( $proceeding["Proceeding"]["title"],array("controller"=>"proceedings","action"=>"view",$proceeding["Proceeding"]["id"]));?>
+    <h2><?=$this->Text->highlight($title,$highlight_words,$highlight_option); ?></h2>
     <ul>
         <li>日時：<?= h($proceeding["Proceeding"]["start_time"]);?>～<?= h($proceeding["Proceeding"]["end_time"]);?></li>
-        <li>場所：<?=h($proceeding["Proceeding"]["place"]);?></li>
+        <li>場所：<?=$this->Text->highlight(h($proceeding["Proceeding"]["place"]),$highlight_words,$highlight_option);?></li>
         <li>会議種類：<?= $mtType[$proceeding["Proceeding"]["type"]];?>        </li>
         <li>参加者：
             <?php foreach($proceeding["Attender"] as $attender) :?>
-                <?= h($attender["attender_name"]);?>
+                <?=$this->Text->highlight( h($attender["attender_name"]),$highlight_words,$highlight_option);?>
             <?php endforeach;?>
         </li>
-        <li>投稿者:<?= h($proceeding["User"]["username"]);?></li>
+        <li>投稿者:<?=$this->Text->highlight( h($proceeding["User"]["username"]),$highlight_words,$highlight_option);?></li>
         <li>投稿日時：<?=h($proceeding["Proceeding"]["created"]);?></li>
     </ul>
 

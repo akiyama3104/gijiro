@@ -15,7 +15,7 @@ class ProceedingsController extends AppController{
     public function  add($id=null){
 
         //投稿者を持ってくる
-        $this->set("id",$id);
+        $this->set(compact("id"));
 
         if ( $this->request->is("post")){
 
@@ -33,27 +33,7 @@ class ProceedingsController extends AppController{
     public  function view($id=null){
 
         $this->Proceeding->id=$id;
-//        $this->Proceeding->recursive=2;
-//        $this->Proceeding->unbindModel(
-//            array("belongsTo" => array("User"))
-//        );
-//        $this->Proceeding->bindModel(
-//            array("hasMany" => array(
-//                "Attender" => array(
-//                    "className" => "Attender",
-//                    "foreignKey" => "proceeding_id",
-//                    "dependent" => false
-//                ),"Heading" => array(
-//                    "className" => "Heading",
-//                    "foreignKey" => "proceeding_id",
-//                    "dependent" => true
-//                )
-//                )
-//
-//
-//            )
-//
-//        );
+
 //        $this->Proceeding->Heading->bindModel(
 //            array("hasMany"=>array("Content"),false)
 //        );
