@@ -7,7 +7,8 @@
  */
 App::uses('AppModel', 'Model');
 class Content extends AppModel{
-//    public  $belongsTo = "Heading";
+    public $actsAs = array("Search.Searchable");
+    public $belongsTo = array("Heading");
     public $validate = array(
 
 
