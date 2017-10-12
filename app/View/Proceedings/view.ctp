@@ -18,9 +18,18 @@
     <li>投稿者：<?= h($proceeding["User"]["username"]);?></li>
     <li>開催時間：<?= h($proceeding["Proceeding"]["start_time"]);?>～<?= h($proceeding["Proceeding"]["end_time"]);?></li>
     <li>開催場所：<?= h($proceeding["Proceeding"]["place"]);?></li>
-    <li>参加者：<?php foreach ($proceeding["Attender"] as $attender ) : ?>
-            <span><?= h($attender["attender_name"]);?></span>
-    <?endforeach;?>
+    <li><table>
+            <tr><td>参加者：</td>
+                <?php foreach ($proceeding["Attender"] as $attender ) : ?>
+                <td><?= h($attender["attender_name"]);?></td>
+                <?endforeach;?>
+            </tr>
+            <tr><td>参加者所属：</td>
+                <?php foreach ($proceeding["Attender"] as $attender ) : ?>
+                    <td><?= h($attender["belongs"]);?></td>
+                <?endforeach;?>
+            </tr>
+        </table>
     </li>
     <li>会議目的：<p><?= nl2br(h($proceeding["Proceeding"]["agenda"]));?></p></li>
     <li>会議種類：<?=$mtType[$proceeding["Proceeding"]["type"]];?></li>

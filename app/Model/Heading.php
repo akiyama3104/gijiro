@@ -7,13 +7,13 @@
  */
 App::uses('AppModel', 'Model');
 class Heading extends AppModel{
-//    public  $belongsTo = "Proceeding";
+    public $actsAs = array("Search.Searchable");
 
-   public  $hasMany= array(
+    public  $hasMany= array(
        "Content"=>array("className"=>"Content",
                          "foreignKey"=>"heading_id",
                          "dependent"=>true)
-   );
+    );
     public $validate = array(
 
 

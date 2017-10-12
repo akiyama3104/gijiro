@@ -40,15 +40,11 @@ class UsersController extends AppController{
 
     //ログイン後のリダイレクトページ
     public function index(){
-//        $this->loadModel("Proceeding");
         $user=$this->Auth->user();
 
         $this->Prg->commonProcess();//検索データのバリデーション
         $conditions=$this->Proceeding->parseCriteria($this->passedArgs);//検索条件の設定
         $this->Proceeding->unbindModel(array("hasMany"=>array("Heading")));
-        if(isset($conditions["OR"][0])){
-            $highlight_word=$conditions["OR"][0];
-        }
         $proceedings=$this->Paginator->paginate($this->Proceeding,$conditions);
         $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
         $this->set(compact("proceedings","user","conditions","user_id") );

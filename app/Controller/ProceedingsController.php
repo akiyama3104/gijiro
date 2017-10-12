@@ -9,7 +9,16 @@
 App::uses("AppController","Controller");
 class ProceedingsController extends AppController{
     public $helpers =array("Html","Form" );
-    public $components=array("JoinProceedings");
+    public $components=array(
+        "Session",
+        "Paginator",
+        "Search.Prg"=>array(
+                "commonProcess" => array(
+                    "paramType" => "querystring",
+                    "filterEmpty" =>  true,
+                )
+        ));
+
     public $uses=array("Proceeding","User");
 
     public function  add($id=null){
@@ -34,18 +43,11 @@ class ProceedingsController extends AppController{
 
         $this->Proceeding->id=$id;
 
-//        $this->Proceeding->Heading->bindModel(
-//            array("hasMany"=>array("Content"),false)
-//        );
         $options = array("field"=> "*",//array("Proceeding.*","User.username"),
             "conditions" => array("Proceeding." . $this->Proceeding->primaryKey => $id),
-//            "contain"=>array("User","Heading","Content","Attender"),
-//            "recursive" => 2
+
         );
-//        $this->Proceeding->recursive=2;
         $this->set("proceeding",$this->Proceeding->find("first", $options));
-
-
     }
     public function edit($id=null){
 
@@ -96,5 +98,22 @@ class ProceedingsController extends AppController{
 
 
     }
+    public  function search(){
+        $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
+        if ( $this->request->is("post")){
+            $conditions=$this->Proceeding->parseCriteria($this->passedArgs);//検索条件の設定
+//            $this->Proceeding->unbindModel(array("hasMany"=>array("Heading")));
+
+            $proceedings=$this->Paginator->paginate($this->Proceeding,$conditions);
+            $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
+
+
+
+        }
+        $this->set(compact("proceedings","user","conditions","user_id") );
+
+
+    }
+
 }
 ?>

@@ -37,14 +37,22 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
-    echo $this->Html->css('bootstrap');
+    echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('bootstrap-responsive');
+    echo $this->Html->css('bootstrap-grid.min');
+    echo $this->Html->css('bootstrap-reboot.min');
+    echo $this->Html->css('jquery-ui.theme.min');
+    echo $this->Html->css('jquery-ui.min');
+    echo $this->Html->css('jquery-ui.structure.min');
+    echo $this->Html->script( 'jquery-3.2.1.min' );
+    echo $this->Html->script( 'jquery-ui.min' );
     echo $this->Html->script('bootstrap');
-	?>
-    <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
+
+    ?>
+<!--    <script-->
+<!--            src="https://code.jquery.com/jquery-3.2.1.min.js"-->
+<!--            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="-->
+<!--            crossorigin="anonymous"></script>-->
 </head>
 <body>
 	<div id="container">

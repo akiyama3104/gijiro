@@ -7,11 +7,7 @@
  */
 App::uses('AppModel', 'Model');
 class Attender extends AppModel{
-
-//    public  $belongsTo = array(
-//        "Proceeding"=>array("type"=>"inner",
-//            )
-//    );
+    public $actsAs = array("Search.Searchable");
     public $validate = array(
 
 
