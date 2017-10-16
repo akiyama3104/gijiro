@@ -14,14 +14,14 @@ class Proceeding extends AppModel{
         array("name"=>"post_date","type"=>"like","field"=>array("Proceeding.created")),
         array("name"=>"next_place","type"=>"value","field"=>array("Proceeding.next_place")),
         //子テーブルをさがすので独自メソッド使用
-        array("name"=>"keyword","type"=>"query","presetType"=>"value" ,"method"=>"searchOverview"),
         array("name"=>"from_hold_date","type"=>"query","method"=>"dateFromConditions"),
         array("name"=>"to_hold_date","type"=>"query","method"=>"dateToConditions"),
         array("name"=>"next_from_hold","type"=>"query","method"=>"nextFromConditions"),
         array("name"=>"next_to_hold","type"=>"query","method"=>"nextToConditions"),
+        array("name"=>"keyword","type"=>"query","method"=>"searchOverview"),
         array("name"=>"attender_belong","type"=>"query","method"=>"searchAttenderBelongs"),
         array("name"=>"contents","type"=>"query","method"=>"searchContents"),
-
+        array("name"=>"category","type"=>"query","method"=>"searchCategorys")
     );
     public $recursive = 2;
     
@@ -32,7 +32,21 @@ class Proceeding extends AppModel{
                             "dependent"=>true),
         "Heading"=>array("className"=>"Heading",
                           "foreignKey"=>"proceeding_id",
-                          "dependent"=>true)
+                          "dependent"=>true),
+//        "CategoryList"=>array("className"=>"CategoryList",
+//                                "foreignKey"=>"proceeding_id",
+//                                "dependent"=>true)
+
+
+    );
+    public $hasAndBelongsToMany = array(
+        'Category' => array(
+            'className' => 'Category',
+            'joinTable' => 'category_lists',
+            'foreignKey' => 'proceeding_id',
+            'associationForeignKey' => 'category_id',
+            'unique' => "keepingExisting"
+        ),
     );
     public  $belongsTo = array("User" );
     public $validate = array(

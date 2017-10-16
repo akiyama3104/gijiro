@@ -5,49 +5,29 @@
  * Date: 2017/10/02
  * Time: 15:49
  */
-class AssociationBehavior extends AppModel{
+class SearchBehavior extends AppModel{
+    public  function searchParentKeys(Model $model,$searchs=array(),$options) {//子テーブルの親IDを取得する
+        $parent_keys = array();
+        if(isset($options["grand_child"])){//もし孫テーブルであれば、その親テーブルの外部キーカラムを設定する
 
-public function getJoins() {
-    return [
-        'fields' => '*',
-        'joins' => [
-            [
-                'type' => 'inner',
-                'table' => 'users',
-                'alias' => 'User',
-                'conditions' => 'proceedings.user_id = User.id'
-            ],
-            [
-                'type' => 'inner',
-                'table' => 'headings',
-                'alias' => 'Heading',
-                'conditions' => 'proceedings.id = Heading.proceeding_id'
-            ],
-            [
-                'type' => 'inner',
-                'table' => 'attenders',
-                'alias' => 'Attender',
-                'conditions' => 'proceedings.id = Attender.proceeding_id'
-            ],
-            [
-                'type' => 'inner',
-                'table' => 'customers',
-                'alias' => 'Customer',
-                'conditions' => 'Order.customers_id = Customer.id'
-            ],
-            [
-                'type' => 'inner',
-                'table' => 'item_sizes',
-                'alias' => 'ItemSize',
-                'conditions' => 'Item.item_sizes_id = ItemSize.id'
-            ]
-        ]
-    ];
-}
+            $parent_col=$options["grand_child"]["parent"];
+            $foreign=$options["grand_child"]["foreign"];
+        }else{//設定されてなければ、デフォルト値を設定
 
-public function getData() {
-    $itemsOrdersRelation = ClassRegistry::init('ItemsOrdersRelation');
-    $joinParam = $this->getJoins();
-    return $itemsOrdersRelation->find('all', $joinParam);
-}
+            $parent_col="Proceeding.id";
+            $foreign="proceeding_id";
+        }
+
+
+        if(!empty($searchs)){
+            $Children = $options["model"]->find("all", array("conditions" => $searchs));
+            foreach($Children as $child){
+                $parent_keys = array($parent_col => $child[$options["model_name"]][$foreign]);
+            }
+        }
+        return $parent_keys;
+    }
+
+
+
 }

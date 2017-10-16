@@ -15,9 +15,6 @@
 <?php
 
 
-
-$type_id=array("inner"=>"社内","outer"=>"社外","other"=>"その他");//会議種類のリスト
-
     $highlight_words=array();
 if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせるキーワード
     $highlight=mb_convert_kana($this->request->data["Proceeding"]["keyword"] , "s");
@@ -26,7 +23,7 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
 
 ?>
 <?php $highlight_option=array("format"=>"<span class =\"bg-warning\">$1</span>");
-    //ハイライトの設定。現在bootstrapが効いていないが・・・。
+    //ハイライトの設定。
 ?>
 
 
@@ -36,7 +33,9 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
         <fieldset>
 
             <?=$this->Form->input("keyword",array( "label"=>"検索キーワード（タイトル、投稿者、参加者、場所、補足）"));?>
-            <?= $this->Html->link("詳細検索へ",array("controller"=>"Proceedings","action"=>"search"));?>
+            <?=$this->Form->input("mt_type",array("label"=>"会議する部署は？","options" => $type_id,"empty"=>""));?>
+            <button type="button" class="btn btn-primary hide-button">詳細に検索したい</button>
+            <div class="hide-target">
             <?=$this->Form->input("contents",array("label"=>"議題目的、議題内容"));?>
 
             <?=$this->Form->input("attender_belong",array("label"=>"参加者所属"));?>
@@ -45,7 +44,7 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
 
             <?=$this->Form->input("user_id",array("label"=>"投稿者名","class"=>"span12","options"=>$user_id,"empty"=>""));?>
 
-            <span><?=$this->Form->input("mt_type",array("label"=>"会議種類","options" => $type_id,"type"=>"radio"));?></span>
+
             <p>開催日期間検索
             <?= $this->Form->input("from_hold_date", array("label"=>"from","type" => "text","class"=>"datepicker")) ?>
             <span>～</span>
@@ -57,10 +56,10 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
             <?= $this->Form->input("to_next_hold", array("label"=>"to","type" => "text","class"=>"datepicker")) ?>
             </p>
             <?= $this->Form->input("post_date", array("label"=>"投稿日","type" => "text","class"=>"datepicker")) ?>
-
+            </div>
             <?php echo $this->Form->end("検索"); ?>
 
-            <?= $this->Html->link("詳細検索へ",array("controller"=>"Proceedings","action"=>"search"));?>
+
         </fieldset>
 
     </div>
@@ -106,49 +105,15 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
 <?php endforeach;?>
 
 </article>
-</div>
-</div>
+
+<script>
 
 
-<script type="text/javascript">
 
-
-    $(function(){
-        $.datepicker.setDefaults({
-
-            // 日本語へローカライズ
-            // Cf. //jquery.nj-clucker.com/jquery-ui-datepicker/
-            closeText: '閉じる',
-            prevText: '<前',
-            nextText: '次>',
-            currentText: '今日',
-            monthNames: ['1月','2月','3月','4月','5月','6月',
-                '7月','8月','9月','10月','11月','12月'],
-            monthNamesShort: ['1月','2月','3月','4月','5月','6月',
-                '7月','8月','9月','10月','11月','12月'],
-            dayNames: ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],
-            dayNamesShort: ['日','月','火','水','木','金','土'],
-            dayNamesMin: ['日','月','火','水','木','金','土'],
-            weekHeader: '週',
-            dateFormat: 'yy-mm-dd',
-
-
-            changeYear: true,  // 年選択をプルダウン化
-            changeMonth: true, // 月選択をプルダウン化
-
-        });
-
-        $(".datepicker").datepicker();
-
-//        $(".datepicker").datepicker("option", {"dateFormat": "yy-mm-dd"});
-
-//        $("#ProceedingDateFrom").val("<?//= $date_from?>//");　//コントローラから設定
-
-//        $("#ProceedingDateTo").datepicker({"prevText":"<","nextText":">"});
-//        $("#ProceedingDateTo").datepicker("option", {
-//            "dateFormat": "yy-mm-dd"
-//        });
-//        $(".InvoiceDateTo").val("<?//= $date_to?>//");　　//コントローラから設定
-
-    });
 </script>
+
+
+
+</div>
+</div>
+

@@ -46,7 +46,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
     echo $this->Html->css('jquery-ui.structure.min');
     echo $this->Html->script( 'jquery-3.2.1.min' );
     echo $this->Html->script( 'jquery-ui.min' );
-    echo $this->Html->script('bootstrap');
+    echo $this->Html->script('bootstrap.min');
+    echo $this->Html->script('gijiro-layout');
 
     ?>
 <!--    <script-->

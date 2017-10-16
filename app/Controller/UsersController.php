@@ -12,13 +12,15 @@ class UsersController extends AppController{
     public $components =array(
         "Session", 
         "Auth",
-        "Paginator",   
+        "Paginator",
+        "Util",//共通して使いたい変数などを載せている
         "Search.Prg" => array(
               "commonProcess" => array(
                   "paramType" => "querystring",
                   "filterEmpty" =>  true,
               )
-        )
+        ),
+
     );
     public $presetVars=true;
     public $helpers = array("Html","Form","Text");
@@ -29,6 +31,8 @@ class UsersController extends AppController{
 //            "Proceeding.start_time" => "asc"
 //        )
     );
+
+
     public function beforeFilter(){//どのページでも共通してこの処理を行う
 
         parent::beforeFilter();//親もbeforeFilterを使えるようにする
@@ -36,6 +40,8 @@ class UsersController extends AppController{
         //未ログイン状態であると、ログイン画面、登録画面しか行けないようにする
         $this->Auth->allow("register","login");
         $this->set("title_for_layout","gijiro!");
+
+
     }
 
     //ログイン後のリダイレクトページ
@@ -46,8 +52,10 @@ class UsersController extends AppController{
         $conditions=$this->Proceeding->parseCriteria($this->passedArgs);//検索条件の設定
         $this->Proceeding->unbindModel(array("hasMany"=>array("Heading")));
         $proceedings=$this->Paginator->paginate($this->Proceeding,$conditions);
+
         $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
-        $this->set(compact("proceedings","user","conditions","user_id") );
+        $type_id=$this->Util->getType();
+        $this->set(compact("proceedings","user","user_id","type_id") );
 
     }
     public function register(){

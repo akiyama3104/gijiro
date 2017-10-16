@@ -47,3 +47,16 @@ proceeding_id int,
 name varchar(255),
 belongs varchar(255)
 );
+
+カテゴリリストテーブル作成
+create table category_lists(
+id int unsigned auto_increment primary key,
+category_id int unsigned  primary key,
+proceeding_id int   primary key
+);
+
+カテゴリテーブル作成
+create table categories(
+id int unsigned auto_increment primary key,
+category varchar(32)
+);

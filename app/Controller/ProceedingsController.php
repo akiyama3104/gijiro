@@ -15,16 +15,24 @@ class ProceedingsController extends AppController{
         "Search.Prg"=>array(
                 "commonProcess" => array(
                     "paramType" => "querystring",
-                    "filterEmpty" =>  true,
-                )
-        ));
+                    "filterEmpty" =>  true)
+         ),
+        "Util"   //共通して使いたい変数などを載せている
+    );
 
-    public $uses=array("Proceeding","User");
+    public $uses=array("Proceeding","User","CategoryList","Category");
+    public function beforeFilter(){
+        parent::beforeFilter();
+
+    }
+
 
     public function  add($id=null){
+        $content_type=$this->Util->getContentType();//会議内容の種類をセットする
+        $type_id=$this->Util->getType();//会議種類をセットする
 
-        //投稿者を持ってくる
-        $this->set(compact("id"));
+        $categories=$this->Category->find("list",array("fields"=>array("id","category")));
+        $this->set(compact("id","type_id","content_type","categories"));
 
         if ( $this->request->is("post")){
 
@@ -47,7 +55,12 @@ class ProceedingsController extends AppController{
             "conditions" => array("Proceeding." . $this->Proceeding->primaryKey => $id),
 
         );
-        $this->set("proceeding",$this->Proceeding->find("first", $options));
+
+        $proceeding=$this->Proceeding->find("first", $options);
+        $content_type=$this->Util->getContentType();//会議内容の種類をセットする
+        $type_id=$this->Util->getType();//会議種類をセットする
+        $categories=$this->Category->find("list",array("fields"=>array("id","category")));
+        $this->set(compact("proceeding","type_id","content_type","category","categories"));
     }
     public function edit($id=null){
 
@@ -55,8 +68,12 @@ class ProceedingsController extends AppController{
 
         $this->Proceeding->id=$id;
         if($this->request->is("get")){
-            $this->request->data=$this->Proceeding->read();
 
+            $this->request->data=$this->Proceeding->read();
+            $content_type=$this->Util->getContentType();//会議内容の種類をセットする
+            $type_id=$this->Util->getType();//会議種類をセットする
+            $categories=$this->Category->find("list",array("fields"=>array("id","category")));
+            $this->set(compact("type_id","content_type","categories"));
 
         }else{
 //                    var_dump($this->request->data());
@@ -98,22 +115,7 @@ class ProceedingsController extends AppController{
 
 
     }
-    public  function search(){
-        $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
-        if ( $this->request->is("post")){
-            $conditions=$this->Proceeding->parseCriteria($this->passedArgs);//検索条件の設定
-//            $this->Proceeding->unbindModel(array("hasMany"=>array("Heading")));
 
-            $proceedings=$this->Paginator->paginate($this->Proceeding,$conditions);
-            $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
-
-
-
-        }
-        $this->set(compact("proceedings","user","conditions","user_id") );
-
-
-    }
 
 }
 ?>
