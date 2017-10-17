@@ -23,7 +23,7 @@
         <?php for($i=0; $i<3; $i++):?>
             <?=$this->Form->hidden("Attender.".$i.".id");//更新するため主キー設定?>
             <p>
-                参加者<?=$displayI=$i+1?>：<?=$this->Form->input("Attender.".$i.".attender_name",array("type"=>"text","size"=>20));?>
+                参加者<?=$i+1?>：<?=$this->Form->input("Attender.".$i.".attender_name",array("type"=>"text","size"=>20));?>
                 所属:<?=$this->Form->input("Attender.".$i.".belongs",array("type"=>"text","size"=>20));?>
 
             </p>
@@ -31,30 +31,44 @@
 
         <?php endfor; ?>
     </li>
-    <li>会議種類：<?=$this->Form->input("type",array("options" => array("inner"=>"社内","outer"=>"社外","other"=>"その他"),"type"=>"radio"));?></li>
+    <li>会議種類：<?=$this->Form->input("type",array("options" => $type_id,"type"=>"radio"));?></li>
+    <?=debug($categories);?>
+    <li>カテゴリ選択：<?=$this->Form->input("CategoryList.".count($categories).".category_id",array("options"=>$categories,'type' => 'select','multiple'=> 'checkbox',)); ?>
+        </li>
+    <li>カテゴリタグ追加：
+        <?php for($i=0; $i<1; $i++):?>
+            <?=$this->Form->hidden("CategoryList.".$i.".Category.".$i.".id");//更新するため主キー設定?>
+            <?=$this->Form->hidden("CategoryList.".$i.".id");//更新するため主キー設定?>
+            <p>
+                カテゴリ<?=$displayI=$i+1?>：<?=$this->Form->input("CategoryList.".$i.".Category.".$i.".category",array("type"=>"text","size"=>20));?>
+
+
+            </p>
+
+
+        <?php endfor; ?>
+    </li>
     <li>次回開催時間：<?=$this->Form->input("next_start",$dateOption);?>：～<?=$this->Form->input("next_end",$dateOption);?></li>
     <li>次回開催場所：<?=$this->Form->input("next_place");?></li>
     <li>補足<?=$this->Form->input("suppl");?></li>
     <li>会議内容：<!--        暫定処置-->
 
 
-        <ul>
-            <?php for($i=0; $i<3; $i++):?>
+        <ul class="content-block">
 
 
                 <li>見出し：<?= $this->Form->input("Heading.".$i.".heading_name");?>
 
-                    <?=$this->Form->hidden("Heading.".$i.".id");//更新するため主キー設定?>
+
 
                     <ul>
-                        <?php for( $j=0;$j<3;$j++):?>
                             <li>
 
                                 <?= $this->Form->input("Heading.".$i.".Content.".$j.".content");?>
-                                <?=$this->Form->hidden("Heading.".$i.".Content.".$j.".id");//更新するため主キー設定?>
-                                <?=$this->Form->input("Heading.".$i.".Content.".$j.".status",array("options"=>array("fixed"=>"決定","task"=>"課題"),"type"=>"radio"));?>
+
+                                <?=$this->Form->input("Heading.".$i.".Content.".$j.".status",array("options"=>$content_type,"type"=>"radio"));?>
                             </li>
-                        <?endfor;?>
+
                     </ul>
                 </li>
             <?endfor;?>

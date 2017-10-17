@@ -10,8 +10,8 @@
 <h2>議事録詳細画面</h2>
 
 <?//カテゴリを表示する際のリスト宣言?>
-<?php $mtType=array("inner"=>"社内","outer" =>"社外","other"=>"その他",""=>"");?>
-<?php $ct_status=array("fixed"=>"決定","task"=>"課題","other"=>"その他",""=>"未設定");?>
+
+<?=var_dump($_POST);?>
 <?=debug($proceeding);?>
 <ul>
     <li><h2>議題：<?= h($proceeding["Proceeding"]["title"]);?></h2></li>
@@ -32,7 +32,7 @@
         </table>
     </li>
     <li>会議目的：<p><?= nl2br(h($proceeding["Proceeding"]["agenda"]));?></p></li>
-    <li>会議種類：<?=$mtType[$proceeding["Proceeding"]["type"]];?></li>
+    <li>会議種類：<?=$type_id[$proceeding["Proceeding"]["type"]];?></li>
     <li>会議内容:
         <ul><?php foreach ($proceeding["Heading"] as $heading): ?>
             <li><h3>見出し：<?=h( $heading["heading_name"]);?></h3>
@@ -42,7 +42,7 @@
                     <li>
                         <ul>
                             <li><?=nl2br(h($content["content"]));?></li>
-                            <li>状態：<?=$ct_status[$content["status"]]?></li>
+                            <li>状態：<?=$content_type[$content["status"]]?></li>
                         </ul></li>
 
                   <?php endforeach;?>

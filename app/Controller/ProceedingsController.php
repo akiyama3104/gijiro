@@ -20,7 +20,7 @@ class ProceedingsController extends AppController{
         "Util"   //共通して使いたい変数などを載せている
     );
 
-    public $uses=array("Proceeding","User","CategoryList","Category");
+    public $uses=array("Proceeding","User","CategoryList","Category","Heading","Content");
     public function beforeFilter(){
         parent::beforeFilter();
 
@@ -108,11 +108,16 @@ class ProceedingsController extends AppController{
 
             $this->redirect("/");
         }
+    }
+    public function deleteHeading($id){
+        if($this->request->is("get")){
+            throw new MethodNotAllowedException();
+        }
 
+        if ($this->request->is("ajax")){
+            $this->Util->deleteForm($this->Heading,$id);
 
-
-
-
+        }
 
     }
 

@@ -106,11 +106,6 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
 
 </article>
 
-<script>
-
-
-
-</script>
 
 
 
