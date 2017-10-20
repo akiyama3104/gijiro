@@ -18,7 +18,10 @@ class Heading extends AppModel{
 
 
     );
-
+    public function addHeading(){
+     $this->saveAll($this->request->data);
+     $this->getLastInsertID();
+    }
 
 
 }

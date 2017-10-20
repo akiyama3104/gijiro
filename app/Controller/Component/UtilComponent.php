@@ -22,17 +22,21 @@ class  UtilComponent extends  Component{
     public function getCategory(){
         return $this->Category->find("list",array("fileds"=>["id","category"]));
     }
+    //フォームを削除する。フォーム追加の共通化は考え中
+    public function deleteForm($model,$id,$req){
 
-    public function deleteForm($model,$id){
+        if($req->is("get")){
+            throw new MethodNotAllowedException();
+        }
 
+        if ($req->is("ajax")){
             if($model->delete($id)){
                 $this->autoRender =false;
                 $this->autoLayout=false;
-//                $response = array("id"=>$id);
-//                $this->header("Content-Type: application/json");
-//                echo json_encode($response);
                 exit();
             }
+        }
+
 
 
     }

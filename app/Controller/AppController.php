@@ -34,7 +34,7 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller {
 //    var $components = array('DebugKit.Toolbar');
 
-    public $components = array('Session', 'DebugKit.Toolbar');
+    public $components = array('Session', 'DebugKit.Toolbar',"Auth");
 
     public $helpers = array(
         'Session',
@@ -42,5 +42,20 @@ class AppController extends Controller {
         'Form' => array('className' => 'TwitterBootstrap.BootstrapForm'),
         'Paginator' => array('className' => 'TwitterBootstrap.BootstrapPaginator'),
     );
+    function beforeFilter(){
+        $this->set("title_for_layout","gijiro!");
+        //未ログイン状態であると、ログイン画面、登録画面しか行けないようにする
+        $this->Auth->allow("register","login");
+        $this->Auth->actionPath = 'controllers/';
+        $this->Auth->authorize = 'actions';
 
+
+        $this->Auth->authError = 'ログインしてください';
+        $this->Auth->loginError = 'ログインに失敗しました。';
+
+        $this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
+        $this->Auth->logoutRedirect = array('controller' => 'users', 'action' => 'login');
+
+
+    }
 }

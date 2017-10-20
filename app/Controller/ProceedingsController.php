@@ -48,24 +48,27 @@ class ProceedingsController extends AppController{
             }
         }
     }
-    public  function addForm($id = null){
+
+
+    //見出しを追加して、見出しid、記事内容idを返す。
+    public  function addHeading(){
 
 
         if (!$this->request->is("ajax") ){
             throw new BadRequestException();
         }
 
-        if($this->Heading->saveAll($this->request->data,array("deep"=>true))){
+        if($this->Heading->save($this->request->data)){
+            $HeadingId=$this->Heading->getInsertID();
+            if($this->Content->save(array("Content"=>array("heading_id"=>$HeadingId)))){
+                $ContentId=$this->Content->getInsertID();
+                $this->autoRender = false;
+                $this->header("Content-Type: application/json");
 
-            $options = array("fields"=>array("Heading.id","Content.id","Attender.id") ,
-                "conditions" => array("Proceeding." . $this->Proceeding->primaryKey => $id),
-            );
-
-            $id_result=$this->Proceeding->find("first", $options);
-
-            $this->redirect("/");
-            echo $this->json_encode($id_result);
-
+                return json_encode(compact("HeadingId","ContentId"));
+            }else{
+                $this->Session->setFlash("Failed");
+            }
         }else{
             $this->Session->setFlash("Failed");
 
@@ -73,6 +76,53 @@ class ProceedingsController extends AppController{
 
 
     }
+    public  function addContent(){
+
+
+        if (!$this->request->is("ajax")) {
+            throw new BadRequestException();
+        }
+
+        if ($this->Content->save($this->request->data)) {
+            $ContentId = $this->Content->getInsertID();
+            $this->autoRender = false;
+            $this->header("Content-Type: application/json");
+
+            return json_encode(compact("ContentId"));
+
+        } else {
+            $this->Session->setFlash("Failed");
+
+        }
+
+    }
+
+
+    public function addAttender(){
+
+        $req=$this->request;
+        if (!$this->request->is("ajax") ){
+            throw new BadRequestException();
+        }
+
+        if($this->Attender->save($this->request->data)){
+            $AttenderId=$this->Attender->getInsertID();
+            $this->autoRender = false;
+            $this->header("Content-Type: application/json");
+
+            return json_encode(compact("AttenderId"));
+
+        }else{
+            $this->Session->setFlash("Failed");
+
+        }
+        $this->Util->addForm();
+
+
+    }
+
+
+
 
 
 
@@ -134,41 +184,27 @@ class ProceedingsController extends AppController{
             }else{
                 $this->Session->setFlash("削除失敗しました。");
             }
-
             $this->redirect("/");
         }
     }
     public function deleteHeading($id){
-        if($this->request->is("get")){
-            throw new MethodNotAllowedException();
-        }
-
-        if ($this->request->is("ajax")){
-            $this->Util->deleteForm($this->Heading,$id);
-
-        }
+            $req=$this->request;
+            $this->Util->deleteForm($this->Heading,$id,$req);
 
     }
     public function deleteContent($id){
-        if($this->request->is("get")){
-            throw new MethodNotAllowedException();
-        }
 
-        if ($this->request->is("ajax")){
-            $this->Util->deleteForm($this->Content,$id);
+        $req=$this->request;
+        $this->Util->deleteForm($this->Content,$id,$req);
 
-        }
 
     }
     public function deleteAttender($id){
-        if($this->request->is("get")){
-            throw new MethodNotAllowedException();
-        }
+        $req=$this->request;
 
-        if ($this->request->is("ajax")){
-            $this->Util->deleteForm($this->Attender,$id);
 
-        }
+            $this->Util->deleteForm($this->Attender,$id,$req);
+
 
     }
 

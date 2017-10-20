@@ -10,8 +10,7 @@ App::uses("AppController","Controller");
 class UsersController extends AppController{
     public $uses=array("Proceeding","User","Attender");
     public $components =array(
-        "Session", 
-        "Auth",
+        "Session",
         "Paginator",
         "Util",//共通して使いたい変数などを載せている
         "Search.Prg" => array(
@@ -37,9 +36,9 @@ class UsersController extends AppController{
 
         parent::beforeFilter();//親もbeforeFilterを使えるようにする
 
-        //未ログイン状態であると、ログイン画面、登録画面しか行けないようにする
-        $this->Auth->allow("register","login");
-        $this->set("title_for_layout","gijiro!");
+
+//        $this->Auth->allow("register","login");
+
 
 
     }

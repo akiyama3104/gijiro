@@ -1,4 +1,4 @@
-ユーザーテーブル作成
+#ユーザーテーブル作成
 create table users(
 id int unsigned auto_increment primary key,
 username varchar(255),
@@ -6,7 +6,7 @@ password varchar(255)
 );
 
 
-議事録テーブル作成
+#議事録テーブル作成
 create table proceedings(
 id int unsigned auto_increment primary key,
 title varchar(255),
@@ -24,7 +24,7 @@ created datetime default null,
 modified datetime default null
 );
 
-議事録見出しテーブル作成
+#議事録見出しテーブル作成
 create table headings(
 id int unsigned auto_increment primary key,
 heading_name varchar(255),
@@ -39,7 +39,7 @@ heading_id int
 
 );
 
-参加者テーブル作成
+#参加者テーブル作成
 create table attenders(
 
 id int unsigned auto_increment primary key,
@@ -48,15 +48,23 @@ name varchar(255),
 belongs varchar(255)
 );
 
-カテゴリリストテーブル作成
-create table category_lists(
+#カテゴリリストテーブル作成
+create table categories_proceedings(
 id int unsigned auto_increment primary key,
 category_id int unsigned  primary key,
 proceeding_id int   primary key
 );
 
-カテゴリテーブル作成
+#カテゴリテーブル作成
 create table categories(
 id int unsigned auto_increment primary key,
 category varchar(32)
+);
+
+#グループテーブル作成
+create table groups(
+id int unsigned auto_increment primary key,
+name varchar(32),
+created datetime default null,
+modified datetime default null
 );

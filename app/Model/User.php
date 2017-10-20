@@ -8,6 +8,8 @@
 App::uses("AppModel","Model");
 class  User extends  AppModel{
 //  public $hasMany = "Proceeding";
+    public  $actsAs = array('Acl' => array('type' => 'requester'));;
+    public  $belongsTo = array('Group');
     public  $validate =array(
       "usrname" => array(
         array(
@@ -40,6 +42,22 @@ class  User extends  AppModel{
         return true;
 
     }
+    function parentNode(){
+        if (!$this->id && empty($this->data)) {
+            return null;
+        }
+        $data = $this->data;
+        if (empty($this->data)) {
+            $data = $this->read();
+        }
+        if (!$data['User']['group_id']) {
+            return null;
+        } else {
+            return array('Group' => array('id' => $data['User']['group_id']));
+        }
+    }
+
+
 }
 
 
