@@ -20,7 +20,7 @@ class ProceedingsController extends AppController{
         "Util"   //共通して使いたい変数などを載せている
     );
 
-    public $uses=array("Proceeding","User","CategoryList","Category","Heading","Content");
+    public $uses=array("Proceeding","User","CategoryList","Category","Heading","Content","Attender");
     public function beforeFilter(){
         parent::beforeFilter();
 
@@ -34,19 +34,49 @@ class ProceedingsController extends AppController{
         $categories=$this->Category->find("list",array("fields"=>array("id","category")));
         $this->set(compact("id","type_id","content_type","categories"));
 
-        if ( $this->request->is("post")){
+        if ( $this->request->is("post")  ){
 
 
 
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
                 $this->Session->setFlash("Success");
+
                 $this->redirect(array("action"=>"edit",$this->Proceeding->id));
             }else{
                 $this->Session->setFlash("Failed");
-
+                echo json_encode(compact("id_result"));
             }
         }
     }
+    public  function addForm($id = null){
+
+
+        if (!$this->request->is("ajax") ){
+            throw new BadRequestException();
+        }
+
+        if($this->Heading->saveAll($this->request->data,array("deep"=>true))){
+
+            $options = array("fields"=>array("Heading.id","Content.id","Attender.id") ,
+                "conditions" => array("Proceeding." . $this->Proceeding->primaryKey => $id),
+            );
+
+            $id_result=$this->Proceeding->find("first", $options);
+
+            $this->redirect("/");
+            echo $this->json_encode($id_result);
+
+        }else{
+            $this->Session->setFlash("Failed");
+
+        }
+
+
+    }
+
+
+
+
     public  function view($id=null){
 
         $this->Proceeding->id=$id;
@@ -76,7 +106,6 @@ class ProceedingsController extends AppController{
             $this->set(compact("type_id","content_type","categories"));
 
         }else{
-//                    var_dump($this->request->data());
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
 //                var_dump($this->Proceeding->sql());
                 $this->Session->setFlash("編集成功しました");
@@ -116,6 +145,28 @@ class ProceedingsController extends AppController{
 
         if ($this->request->is("ajax")){
             $this->Util->deleteForm($this->Heading,$id);
+
+        }
+
+    }
+    public function deleteContent($id){
+        if($this->request->is("get")){
+            throw new MethodNotAllowedException();
+        }
+
+        if ($this->request->is("ajax")){
+            $this->Util->deleteForm($this->Content,$id);
+
+        }
+
+    }
+    public function deleteAttender($id){
+        if($this->request->is("get")){
+            throw new MethodNotAllowedException();
+        }
+
+        if ($this->request->is("ajax")){
+            $this->Util->deleteForm($this->Attender,$id);
 
         }
 

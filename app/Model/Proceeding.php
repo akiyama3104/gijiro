@@ -21,7 +21,7 @@ class Proceeding extends AppModel{
         array("name"=>"keyword","type"=>"query","method"=>"searchOverview"),
         array("name"=>"attender_belong","type"=>"query","method"=>"searchAttenderBelongs"),
         array("name"=>"contents","type"=>"query","method"=>"searchContents"),
-        array("name"=>"category","type"=>"query","method"=>"searchCategorys")
+        array("name"=>"category","type"=>"query","method"=>"searchCategories")
     );
     public $recursive = 2;
     
@@ -42,10 +42,10 @@ class Proceeding extends AppModel{
     public $hasAndBelongsToMany = array(
         'Category' => array(
             'className' => 'Category',
-            'joinTable' => 'category_lists',
-            'foreignKey' => 'proceeding_id',
-            'associationForeignKey' => 'category_id',
-            'unique' => "keepingExisting"
+            'joinTable' => 'categories_proceedings',
+            'foreignKey' => 'proceeding_id',//中間テーブルと親テーブルの外部キー
+            'associationForeignKey' => 'category_id',//中間テーブルと子テーブルの
+//            'unique' => "keepingExisting"
         ),
     );
     public  $belongsTo = array("User" );

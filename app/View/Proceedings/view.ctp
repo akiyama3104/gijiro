@@ -33,6 +33,10 @@
     </li>
     <li>会議目的：<p><?= nl2br(h($proceeding["Proceeding"]["agenda"]));?></p></li>
     <li>会議種類：<?=$type_id[$proceeding["Proceeding"]["type"]];?></li>
+    <li>カテゴリ：<?php foreach ($proceeding["Category"] as $category): ?>
+                <span><?=$category["category"];?></span>
+                <?php endforeach;?>
+    </li>
     <li>会議内容:
         <ul><?php foreach ($proceeding["Heading"] as $heading): ?>
             <li><h3>見出し：<?=h( $heading["heading_name"]);?></h3>
