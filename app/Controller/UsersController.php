@@ -55,7 +55,9 @@ class UsersController extends AppController{
 
         $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));//投稿者一覧で検索するために取得
         $type_id=$this->Proceeding->getType();//会議内容の種類取得
-        $this->set(compact("proceedings","user","user_id","type_id","categories") );
+        $categories=$this->Category->getCategory();
+        $attenders=$this->Attender->find("list",array("fields"=>array("id","attender_name")));
+        $this->set(compact("proceedings","user","user_id","type_id","categories","attenders","categories") );
 
     }
     public function register(){

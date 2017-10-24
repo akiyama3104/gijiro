@@ -9,7 +9,7 @@
 App::uses("AppController","Controller");
 class ProceedingsController extends AppController{
     public $helpers =array("Html","Form" );
-    public $uses=array("Proceeding","User","Attender","CategoriesProceeding","Category");
+    public $uses=array("Proceeding","User","Attender","CategoriesProceeding","Category","Content");
     public $components=array(
         "Session",
         "Paginator",
@@ -35,26 +35,25 @@ class ProceedingsController extends AppController{
 
 
     public function  add($id=null){
-        $content_type=$this->Proceeding->getContentType();//会議内容の種類をセットする
+        $content_type=$this->Content->getContentType();//会議内容の種類をセットする
         $type_id=$this->Proceeding->getType();//会議種類をセットする
         $json_attender=$this->Attender->jsonizeAttender();
         $categories=$this->Category->getCategory();
         $this->set(compact("id","type_id","content_type","categories","json_attender"));
 
         if ( $this->request->is("post")  ){
-//            var_dump($this->request->data);
 
 
-//            foreach ($this->request->data["Attender"] as $attender){
-//
-//
-//            }
 
+            //参加者がテーブルに存在するかチェックし、いない場合、新たに追加する。
+            //返り値はそれらの参加者の主キーのベクトルである。
+            $attenders_id=$this->Attender->addAttender($this->request->data["Attender"]);
 
+            $this->request->data["Attender"]["Attender"]=$attenders_id;
 
 
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
-                var_dump($this->Proceeding->sql());
+
 
                 $this->Session->setFlash("Success");
 
@@ -143,7 +142,7 @@ class ProceedingsController extends AppController{
         );
 
         $proceeding=$this->Proceeding->find("first", $options);
-        $content_type=$this->Proceeding->getContentType();//会議内容の種類をセットする
+        $content_type=$this->Content->getContentType();//会議内容の種類をセットする
         $type_id=$this->Proceeding->getType();//会議種類をセットする
         $categories=$this->Category->getCategory();
         $this->set(compact("proceeding","type_id","content_type","category","categories"));
@@ -156,7 +155,7 @@ class ProceedingsController extends AppController{
         if($this->request->is("get")){
             $uid = $this->Auth->user()["id"];//ユーザ-idのみ取得
             $this->request->data=$this->Proceeding->read();
-            $content_type=$this->Proceeding->getContentType();//会議内容の種類をセットする
+            $content_type=$this->Content->getContentType();//会議内容の種類をセットする
             $type_id=$this->Proceeding->getType();//会議種類をセットする
 
 
@@ -167,6 +166,16 @@ class ProceedingsController extends AppController{
             $this->set(compact("type_id","content_type","categories","uid","json_attender"));
 
         }else{
+
+
+
+            //参加者がテーブルに存在するかチェックし、いない場合、新たに追加する。
+            //返り値はそれらの参加者の主キーのベクトルである。
+            $attenders_id=$this->Attender->addAttender($this->request->data["Attender"]);
+            $this->request->data["Attender"]["Attender"]=$attenders_id;
+
+
+
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
                 $this->Session->setFlash("編集成功しました");
 

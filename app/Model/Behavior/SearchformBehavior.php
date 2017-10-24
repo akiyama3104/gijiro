@@ -37,14 +37,14 @@ class SearchformBehavior extends ModelBehavior {
 
     //       以下の処理は、もしbelongsToを結んでいない（親テーブルを外部結合しない）
     //       孫テーブルを探索する場合、その親テーブルの外部キーカラムを設定する処理である。使いにくいため使用しない
-    //        if(isset($options["grand_child"])){
-    //
-    //            $parent_col=$options["grand_child"]["parent"];
-    //            $foreign=$options["grand_child"]["foreign"];
-    //        }else{//設定されてなければ、デフォルト値を設定
-    //            $parent_col="Proceeding.id";
-    //            $foreign="proceeding_id";
-    //        }
+//            if(isset($options["grand_child"])){
+//
+//                $parent_col=$options["grand_child"]["parent"];
+//                $foreign=$options["grand_child"]["foreign"];
+//            }else{//設定されてなければ、デフォルト値を設定
+                $parent_col="Proceeding.id";
+                $foreign="proceeding_id";
+//            }
     $Children = $options["model"]->find("all", array("conditions" => $searchs));
     if(!empty($Children)){
         foreach($Children as $child){
@@ -53,7 +53,7 @@ class SearchformBehavior extends ModelBehavior {
         }
         return $parent_keys;
     }
-        return  $parent_keys[]=array("Proceeding.id"=>"");//findできなかったらどんな条件を送るべきか模索中
+        return  $parent_keys[]=array("Proceeding.id"=>"");
     }
 
 }

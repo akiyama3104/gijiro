@@ -53,11 +53,8 @@
 
             <li id="heading_<?=$i;?>"class="heading">見出し：<span><button class="btn remove-btn remove-heading" type="button">見出し削除-</button></span>
                 <?= $this->Form->input("Heading.".$i.".heading_name",array("class"=>array("form-extension","extension-heading"),"label"=>"見出し名"));?>
-
-
                 <?=$this->Form->hidden("Heading.".$i.".id", array("class"=>"HideHeadingId"));//更新,削除するため主キー設定?>
-
-                <ul class="inner_content">
+               <ul class="inner_content">
                     <?php foreach($heading["Content"] as $j => $content):?>
                     <li class="contents content_<?=$j?>">
 
@@ -81,7 +78,7 @@
     <li>次回開催場所：<?=$this->Form->input("next_place");?></li>
     <li>補足<?=$this->Form->input("suppl");?></li>
 
-    <li><?= $this->Form->end("保存");?></li>
+    <li><?= $this->Form->end("保存",array("class"=>array("btn","btn-primary")));?></li>
 </ul>
 
 <?php //暫定処理。記事を作成したユーザーのみが削除できる.
@@ -91,40 +88,29 @@ if( $uid ==$this->request->data["User"]["id"]){
  } ?>
 
 <script>
-    var availableTags = [
 
-
-
-
-    ];
     $(function() {
-        $(document).ready( function() {
-            var json_attenders =<?= $json_attender?>,
-            attenders=[],
-            attenderIds=[],
-                belongs=[];
-//           $.each( json_attenders , function (i,el) {
-//                attenders.push(el["Attender"]["attender_name"]);
-//                attenderIds.push(el["Attender"]["id"]);
-//                belongs.push(el["Attender"]["belongs"]);
-//            });
-                console.log(json_attenders);
+        var json_attenders =<?= $json_attender?>;
+
+        $(document).on("keyup",".attender-name",function(){
 
 
+            $(".attender-name").autocomplete({
+                source: json_attenders,
+                autoFocus: true,
+                delay: 500,
+                minLength: 1,
 
-            $(document).on("keyup",".attender-name",function(){
+                select:function(e,ui){
+                    $(this).val(ui.item.label);
+                    var attender_idx = $(this).closest("td").attr("id").match(/[0-9]+/);//自分のテーブルデータ(td)のid番号を取得
+                    $("#Attender"+attender_idx+"Belongs").val(ui.item.belongs);//所属項目に値を入れる
 
+                    return false;
+                }
+            });
 
-
-
-                $(".attender-name").autocomplete({
-                    source: json_attenders,
-                    autoFocus: true,
-                    delay: 250,
-                    minLength: 2
-                });
-
-                //ajaxで検索かける用。レスポンスが遅かったり不具合があったりで不採用
+            //ajaxで検索かける用。レスポンスが遅かったり不具合があったりで不採用
 //                var keyword = $(this).val();
 //                availableTags = new Array();
 //
@@ -154,12 +140,13 @@ if( $uid ==$this->request->data["User"]["id"]){
 //                            console.log("errorThrown    : " + errorThrown.message);
 //                    }
 //                });
-            });
+        });
 
 
 
 
-            });
+
+
 
 
         //途中で挿入した内容の順番を保持するために、各idを振りなおす修正関数
@@ -224,22 +211,23 @@ if( $uid ==$this->request->data["User"]["id"]){
         function addAttender(add_triger){
 
             var id = $("#ProceedingId").val(),
-                id_values=addAjax(id,"addAttender","参加者追加",{proceeding_id:id}),
+                //id_values=addAjax(id,"addAttender","参加者追加",{proceeding_id:id}),
                 idx_cols=Math.max.apply(null ,
                     $("[id^=attender-record]").map(
                         function () {return parseInt($(this).attr("id").match(/[0-9]+/),10)}))+1,//追加するのカラムのidx
                 current_idx= add_triger.closest("td").attr("id").match(/[0-9]+/),//現在のidx(挿入する際に必要)
-                val_id_cols =id_values["AttenderId"],//echo $AttenderId?>参加者id値の最大値+1
-                array_val_cols=$(".HideAttenderId").map(function(){return parseInt($(this).val(),10);}),//参加者idの配列
+              //  val_id_cols =id_values["AttenderId"],//echo $AttenderId?>参加者id値の最大値+1
+               // array_val_cols=$(".HideAttenderId").map(function(){return parseInt($(this).val(),10);}),//参加者idの配列
                 format_attender=
                     "<td id=\"attender-record"+idx_cols+"\">\n" +//"+val_id_cols+"
-                    "<input type=\"hidden\" name=\"data[Attender]["+idx_cols+"][id]\" class=\"HideAttenderId\" value=\""+val_id_cols+"\" id=\"Attender"+idx_cols+"Id\">" +
+                   // "<input type=\"hidden\" name=\"data[Attender]["+idx_cols+"][id]\" class=\"HideAttenderId\" value=\""+val_id_cols+"\" id=\"Attender"+idx_cols+"Id\">" +
                     "<button type=\"button\" class=\"btn add-btn add-btn-attender\">+</button>\n" +
                     "  <button type=\"button\" class=\"btn remove-btn remove-attender\">-</button>\n" +
-                    "<label for=\"Attender"+idx_cols+"AttenderName\"></label><input name=\"data[Attender]["+idx_cols+"][attender_name]\" size=\"5\" class=\"attender-name add-attender attender_"+idx_cols+"\" type=\"text\"  id=\"Attender"+idx_cols+"AttenderName\">                    </td>",
+                    "<label for=\"Attender"+idx_cols+"AttenderName\"></label><input name=\"data[Attender]["+idx_cols+"][attender_name]\" size=\"5\" class=\"attender-name add-attender attender_"+idx_cols+"\" type=\"text\"  id=\"Attender"+idx_cols+"AttenderName\"> " +
+                    "</td>",
                 format_belongs="<td id=\"belongs-record"+idx_cols+"\">\n" +
                     "<input name=\"data[Attender]["+idx_cols+"][belongs]\" size=\"5\" " +
-                    "class=\"belong add-belong add-attender\" maxlength=\"255\" type=\"text\"  id=\"Attender"+idx_cols+"Belongs\">             " +
+                    "class=\"belong add-belong add-attender\" maxlength=\"255\" type=\"text\"  id=\"Attender"+idx_cols+"Belongs\">" +
                     "</td>";
 
             $("#attender-record"+current_idx).after(format_attender)
@@ -249,7 +237,7 @@ if( $uid ==$this->request->data["User"]["id"]){
                 .hide()
                 .fadeIn();
 
-            idModify(array_val_cols,$(".HideAttenderId"));
+            //idModify(array_val_cols,$(".HideAttenderId"));
 
 
             return false;
@@ -273,12 +261,12 @@ if( $uid ==$this->request->data["User"]["id"]){
         $(document).on("click",".remove-attender",function () {
             var　id_val_cols = $(this).siblings(".HideAttenderId").val(),//カラムのid値
                 current_idx= $(this).closest("td").attr("id").match(/[0-9]+/),//カラムのidx
-                num_attenders = $(".HideAttenderId").length;//カラムの数
+                num_attenders = $("[id^=attender-record]").length;//カラムの数
             if(num_attenders <= 1 ) {
                 alert("参加者は一人以上必要です。");
                 return false;
             }else{
-                removeAjax(id_val_cols,"deleteAttender","参加者削除");
+//                removeAjax(id_val_cols,"deleteAttender","参加者削除");
                 $("#attender-record"+current_idx).add("#belongs-record"+current_idx).fadeOut(function () {
                     $(this).remove();
                 });

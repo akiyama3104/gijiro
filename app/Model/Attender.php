@@ -9,14 +9,14 @@ App::uses('AppModel', 'Model');
 class Attender extends AppModel{
     public $displayField = 'id';
     public $actsAs = array("Search.Searchable");
-//    public  $validate =array(
-//        "attender_name" => array(
-//              array(
-//                "rule"=>"notBlank",
-//                "message"=>"必須項目です。"
-//            )
-//        )
-//    );
+    public  $validate =array(
+        "attender_name" => array(
+              array(
+                "rule"=>"notBlank",
+                "message"=>"記入してください。"
+            )
+        )
+    );
 
 
 
@@ -31,12 +31,30 @@ class Attender extends AppModel{
             $json_attender[$i]["id"]=$attender["Attender"]["id"];
 
             }
-//        $json_attender=$arr_attender;
+
 
         return json_encode($json_attender);
     }
 
+    //参加者がテーブルに存在するかチェックし、いない場合、新たに追加する。
+    //返り値はそれらの主キーのベクトルである。
+    public function addAttender($attenders){
 
+        $ids=[];
+        foreach ($attenders as   $attender){
+            $conditions=array("attender_name"=>$attender["attender_name"],"belongs"=>$attender["belongs"]);
+            if($this->hasAny($conditions)){
+                $id=$this->find("first",array("fields"=>"id","conditions"=>$conditions));
+                $ids[]=$id["Attender"]["id"];
+            }else{
+                $this->saveAll($attender);
+                $ids[]=$this->getInsertId();
+            }
+        }
+
+        return $ids;
+
+    }
 
 
 }

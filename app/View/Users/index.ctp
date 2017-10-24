@@ -26,7 +26,6 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
     //ハイライトの設定。
 ?>
 
-
 <div class="span3">
     <div class="well" >
         <?php echo $this->Form->create("Proceeding", array("url"=>array("controller"=>"users","action"=>"index"))); ?>
@@ -44,7 +43,13 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
 
             <?=$this->Form->input("user_id",array("label"=>"投稿者名","class"=>"span12","options"=>$user_id,"empty"=>""));?>
 
+            <p>
+            <?=$this->Form->input("attender",array("label"=>"参加者", "class"=>"span12",'type' => 'select', 'multiple' => 'checkbox',"options"=>$attenders,"empty"=>""));?>
+            </p>
 
+                <p>
+                    <?=$this->Form->input("category",array("label"=>"カテゴリ", "class"=>"span12",'type' => 'select', 'multiple' => 'checkbox',"options"=>$categories,"empty"=>""));?>
+                </p>
             <p>開催日期間検索
             <?= $this->Form->input("from_hold_date", array("label"=>"from","type" => "text","class"=>"datepicker")) ?>
             <span>～</span>
@@ -97,13 +102,12 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
         <li>カテゴリ：<?php foreach($proceeding["Category"] as $category) :?>
                 <?=$this->Text->highlight( h($category["category"]),$highlight_words,$highlight_option);?>
             <?php endforeach;?>
-            <?=$this->Text->highlight( h($proceeding["Proceeding"]["suppl"]),$highlight_words,$highlight_option);?></li></li>
+        </li>
         <li>補足：<?=$this->Text->highlight( h($proceeding["Proceeding"]["suppl"]),$highlight_words,$highlight_option);?></li>
         <li>投稿日時：<?=h($proceeding["Proceeding"]["created"]);?></li>
 
     </ul>
 
-    <?=debug($proceeding);?>
 
 </section>
 <?php endforeach;?>

@@ -21,12 +21,16 @@ class Proceeding extends AppModel{
         array("name"=>"keyword","type"=>"query","method"=>"searchOverview"),
         array("name"=>"attender_belong","type"=>"query","method"=>"searchAttenderBelongs"),
         array("name"=>"contents","type"=>"query","method"=>"searchContents"),
-        array("name"=>"category","type"=>"query","method"=>"searchCategories")
+        array("name"=>"category","type"=>"query","method"=>"searchCategories"),
+        //habtm検索用
+        array('name' => 'attender', 'type' => 'subquery', 'method' => 'searchAttender', 'field' => 'Proceeding.id'),
+        array('name' => 'category', 'type' => 'subquery', 'method' => 'searchCategory', 'field' => 'Proceeding.id'),
+
     );
 
 
     public $recursive = 2;
-    
+
 
     public  $hasMany =array(
 //        "Attender"=>array("className"=>"Attender",
@@ -35,9 +39,6 @@ class Proceeding extends AppModel{
         "Heading"=>array("className"=>"Heading",
                           "foreignKey"=>"proceeding_id",
                           "dependent"=>true),
-//        "CategoryList"=>array("className"=>"CategoryList",
-//                                "foreignKey"=>"proceeding_id",
-//                                "dependent"=>true)
 
 
     );
@@ -48,6 +49,7 @@ class Proceeding extends AppModel{
             'foreignKey' => 'proceeding_id',//中間テーブルと親テーブルの外部キー
             'associationForeignKey' => 'category_id',//中間テーブルと子テーブルの
 //            'unique' => "keepingExisting"
+            'with'=>'CategoriesProceeding'
         ),
 
         "Attender"=> array(
@@ -55,23 +57,28 @@ class Proceeding extends AppModel{
             "joinTable"=>"attenders_proceedings",
             'foreignKey' => 'proceeding_id',//中間テーブルと親テーブルの外部キー
             'associationForeignKey' => 'attender_id',//中間テーブルと子テーブルの外部キー
+            'with'=>'AttendersProceeding'
 
         )
     );
     public  $belongsTo = array("User" );
 
 
+//////リスト宣言
 
-    private $content_type=array("fixed"=>"決定","task"=>"課題",""=>"未設定");//会議内容の種類リスト
     private $type_id=array("tech"=>"技術部","sale"=>"営業部","suppo"=>"サポート","other"=>"その他");//会議種類のリスト
-
-    public function getContentType(){
-        return $this->content_type;
-    }
     public function getType(){
         return $this->type_id;
     }
+///////
 
+
+    public function sql(){//sqlログを出力するメソッド
+        $sql = $this->getDataSource()->getLog();
+
+        $this->log($sql);
+        return $sql;
+    }
 
 
 
@@ -123,12 +130,7 @@ class Proceeding extends AppModel{
         $conditions = array("DATE(Post.created) <= DATE(?)"=>array($to_date));
         return $conditions;
     }
-    public function sql(){//sqlログを出力するメソッド
-        $sql = $this->getDataSource()->getLog();
 
-        $this->log($sql);
-        return $sql;
-    }
 
     public function searchContents($searchs=array()){
 
@@ -169,6 +171,8 @@ class Proceeding extends AppModel{
 
 
     }
+
+
     public  function searchOverview($searchs=array()) {
         $conditions = array();
         if(isset($searchs["keyword"])){
@@ -179,14 +183,103 @@ class Proceeding extends AppModel{
                 $conditions["OR"][]=array("Proceeding.place like"=> "%".$key."%");
                 $conditions["OR"][]=array("Proceeding.title like"=> "%".$key."%");
                 $conditions["OR"][]=array("Proceeding.suppl"=>"%".$key."%");
-//              $conditions["OR"][]=array("Proceeding.next_place like"=> "%".$key."%");
+
                 $attender_conditions["OR"][]=array("Attender.attender_name like"=> "%".$key."%");
                 //あいまい検索かつOR検索
             }
-            $attenders_option=array("model"=>$this->Attender,"model_name"=>"Attender");//検索オプション
+            $attenders_option=array("model"=>$this->Attender,"model_name"=>"AttendersProceeding");//検索オプション
+            //Attenderは孫テーブルなので、子テーブル("model_name"=>"Attender")と親との外部キーをとるように設定
+            foreach($this->searchParentKeys($attender_conditions, $attenders_option) as $parentKey){
+                $conditions["OR"][]=$parentKey;
+            }
+
+
             $conditions["OR"][] =$this->searchParentKeys($attender_conditions,$attenders_option);
         }
         return $conditions;
+    }
+
+    //暫定...。
+    public function searchAttender($searchs=array()){
+        $attenders = [];
+//        if (isset($searchs["keyword"])) {
+//            $keys = $this->splitBlank($searchs["keyword"]);
+//
+//            foreach ($keys as $key) {
+//                $ids = $this->Attender->find("list", array("conditions" => array("Attender.attender_name like" => "%" . $key . "%")));
+//                foreach ($ids as $id) {
+//                    $attenders[] = $id;
+//                }
+//                var_dump($attenders);
+//            }
+
+//
+//            $attenders_condtions=[];
+//            foreach ($attenders as $attender){
+//                foreach ($attender as $item){
+//                    $attenders_condtions[]= $item["id"];
+//                }
+//            }
+
+
+//            $cond=array_unique($attenders);
+//            var_dump($cond);
+
+            $this->AttendersProceeding->Behaviors->attach('Containable', array('autoFields' => false));
+            $this->AttendersProceeding->Behaviors->attach('Search.Searchable');
+
+            $cond =$searchs["attender"];
+            $query = $this->AttendersProceeding->getQuery('all', array(
+                    'conditions' => array('AttendersProceeding.attender_id' => $cond),
+                    'group' => 'AttendersProceeding.attender_id',
+                    'fields' => array('proceeding_id'),
+                    'contain' => array('Attender')
+                )            );
+//        }
+        return $query;
+//        $conditions = array();
+//        if(isset($searchs["keyword"])) {
+//            $keys = $this->splitBlank($searchs["keyword"]);
+//            $attender_conditions = array();
+//            foreach ($keys as $key) {
+//                $attender_conditions["OR"][] = array("Attender.attender_name like" => "%" . $key . "%");
+//                //あいまい検索かつOR検索
+//            }
+//            $grand_children = $this->Attender->find("all", array("conditions" => $attender_conditions));
+//            $children_conditions = [];
+//            if (!empty($grand_children)) {
+//                foreach ($grand_children as $grand_child) {
+//                    $children_conditions["OR"][] = array("attender_id" => $grand_child["Attender"]["id"]);
+//                }
+//
+//            }
+//            $Children = $this->AttendersProceeding->find("all", array("conditions" => $children_conditions));
+//            if (!empty($Children)) {
+//                foreach ($Children as $child) {
+//                    //findしてきた結果で検索条件を作成
+//                    $parent_keys["OR"][] = array("Proceeding.id" => $child["proceeding_id"]);
+//                }
+////                return $parent_keys;
+//            }
+//        }
+//
+    }
+
+
+    public function searchCategory($searchs=array()){
+
+        $this->CategoriesProceeding->Behaviors->attach('Containable', array('autoFields' => false));
+        $this->CategoriesProceeding->Behaviors->attach('Search.Searchable');
+
+        $cond =$searchs["category"];
+        $query = $this->CategoriesProceeding->getQuery('all', array(
+            'conditions' => array('CategoriesProceeding.category_id' => $cond),
+            'group' => 'CategoriesProceeding.category_id',
+            'fields' => array('proceeding_id'),
+            'contain' => array('Category')) );
+
+        return $query;
+
     }
 
 

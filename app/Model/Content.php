@@ -13,8 +13,12 @@ class Content extends AppModel{
 
 
     );
-
-
+    ////リストの宣言
+    private $content_type=array("fixed"=>"決定","task"=>"課題",""=>"未設定");//会議内容の種類リスト
+    public function getContentType(){
+        return $this->content_type;
+    }
+    ////
 
 }
 

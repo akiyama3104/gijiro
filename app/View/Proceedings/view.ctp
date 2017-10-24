@@ -56,5 +56,5 @@
     <li>更新日時：<?= h($proceeding["Proceeding"]["modified"]);?></li>
     
 </ul>
-<p><?=$this->Html->link("詳細編集",array('controller'=>'proceedings',"action"=>"edit",$proceeding["Proceeding"]["id"]));?></p>
+<p><?=$this->Html->link("編集",array('controller'=>'proceedings',"action"=>"edit",$proceeding["Proceeding"]["id"]));?></p>
 
