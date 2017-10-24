@@ -94,6 +94,10 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
                 <?=$this->Text->highlight( h($attender["attender_name"]),$highlight_words,$highlight_option);?>
             <?php endforeach;?>
         </li>
+        <li>カテゴリ：<?php foreach($proceeding["Category"] as $category) :?>
+                <?=$this->Text->highlight( h($category["category"]),$highlight_words,$highlight_option);?>
+            <?php endforeach;?>
+            <?=$this->Text->highlight( h($proceeding["Proceeding"]["suppl"]),$highlight_words,$highlight_option);?></li></li>
         <li>補足：<?=$this->Text->highlight( h($proceeding["Proceeding"]["suppl"]),$highlight_words,$highlight_option);?></li>
         <li>投稿日時：<?=h($proceeding["Proceeding"]["created"]);?></li>
 

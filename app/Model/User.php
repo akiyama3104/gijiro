@@ -7,9 +7,9 @@
  */
 App::uses("AppModel","Model");
 class  User extends  AppModel{
-//  public $hasMany = "Proceeding";
-    public  $actsAs = array('Acl' => array('type' => 'requester'));;
-    public  $belongsTo = array('Group');
+
+//    public $actsAs = array('Acl' => array('type' => 'both'));
+//    public  $belongsTo = array('Group');
     public  $validate =array(
       "usrname" => array(
         array(
@@ -36,26 +36,39 @@ class  User extends  AppModel{
 
     );
 
+    /**
+     * @return array
+     */
+    public function sql(){//sqlログを出力するメソッド
+        $sql = $this->getDataSource()->getLog();
+
+        $this->log($sql);
+        return $sql;
+    }
+
 
     public function beforeSave($options=array()){ //ユーザー保存する前に、パスワードをハッシュ化する
         $this->data["User"]["password"]=AuthComponent::password($this->data["User"]["password"]);
         return true;
 
     }
-    function parentNode(){
-        if (!$this->id && empty($this->data)) {
-            return null;
-        }
-        $data = $this->data;
-        if (empty($this->data)) {
-            $data = $this->read();
-        }
-        if (!$data['User']['group_id']) {
-            return null;
-        } else {
-            return array('Group' => array('id' => $data['User']['group_id']));
-        }
-    }
+//
+//        public function parentNode() {
+//            if (!$this->id && empty($this->data)) {
+//                return null;
+//            }
+//            if (isset($this->data['User']['group_id'])) {
+//                $groupId = $this->data['User']['group_id'];
+//            } else {
+//                $groupId = $this->field('group_id');
+//            }
+//            if (!$groupId) {
+//                return null;
+//            } else {
+//                return array('Group' => array('id' => $groupId));
+//            }
+//        }
+
 
 
 }

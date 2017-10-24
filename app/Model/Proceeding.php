@@ -11,7 +11,7 @@ class Proceeding extends AppModel{
     public $filterArgs = array(
         array("name"=>"user_id","type"=>"value","field"=>"Proceeding.user_id"),
         array("name"=>"mt_type","type"=>"value","field"=>"Proceeding.type"),
-        array("name"=>"post_date","type"=>"like","field"=>array("Proceeding.created")),
+        array("name"=>"post_date","type"=>"like","field"=>array("Proceeding.start_time")),
         array("name"=>"next_place","type"=>"value","field"=>array("Proceeding.next_place")),
         //子テーブルをさがすので独自メソッド使用
         array("name"=>"from_hold_date","type"=>"query","method"=>"dateFromConditions"),
@@ -23,13 +23,15 @@ class Proceeding extends AppModel{
         array("name"=>"contents","type"=>"query","method"=>"searchContents"),
         array("name"=>"category","type"=>"query","method"=>"searchCategories")
     );
+
+
     public $recursive = 2;
     
 
     public  $hasMany =array(
-        "Attender"=>array("className"=>"Attender",
-                            "foreignKey"=>"proceeding_id",
-                            "dependent"=>true),
+//        "Attender"=>array("className"=>"Attender",
+//                            "foreignKey"=>"proceeding_id",
+//                            "dependent"=>true),
         "Heading"=>array("className"=>"Heading",
                           "foreignKey"=>"proceeding_id",
                           "dependent"=>true),
@@ -47,8 +49,33 @@ class Proceeding extends AppModel{
             'associationForeignKey' => 'category_id',//中間テーブルと子テーブルの
 //            'unique' => "keepingExisting"
         ),
+
+        "Attender"=> array(
+            "className"=>"Attender",
+            "joinTable"=>"attenders_proceedings",
+            'foreignKey' => 'proceeding_id',//中間テーブルと親テーブルの外部キー
+            'associationForeignKey' => 'attender_id',//中間テーブルと子テーブルの外部キー
+
+        )
     );
     public  $belongsTo = array("User" );
+
+
+
+    private $content_type=array("fixed"=>"決定","task"=>"課題",""=>"未設定");//会議内容の種類リスト
+    private $type_id=array("tech"=>"技術部","sale"=>"営業部","suppo"=>"サポート","other"=>"その他");//会議種類のリスト
+
+    public function getContentType(){
+        return $this->content_type;
+    }
+    public function getType(){
+        return $this->type_id;
+    }
+
+
+
+
+
     public $validate = array(
         "title"=>array(
             array("rule"=>"notBlank","message"=>"必須項目です。")

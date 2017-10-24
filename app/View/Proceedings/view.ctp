@@ -8,11 +8,6 @@
 ?>
 
 <h2>議事録詳細画面</h2>
-
-<?//カテゴリを表示する際のリスト宣言?>
-
-<?=var_dump($_POST);?>
-<?=debug($proceeding);?>
 <ul>
     <li><h2>議題：<?= h($proceeding["Proceeding"]["title"]);?></h2></li>
     <li>投稿者：<?= h($proceeding["User"]["username"]);?></li>

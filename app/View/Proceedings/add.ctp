@@ -10,8 +10,8 @@
 
 <?php $dateOption = array('empty' => array('day' => date(''), 'month' => date(''), 'year' => date('')));//次回開催時間などの初期値?>
 <h2>議事録準備画面</h2>
-<?php $addData= $this->request->data?>
-<?= debug($addData);?>
+
+
 <ul>
     <?=$this->Form->create("Proceeding",array("action"=>"add"));?>
     <?=$this->Form->hidden("id");?>
@@ -73,44 +73,64 @@
 
         <script>
             $(function() {
+                var attenders =<?= $json_attender?>;
+                console.log(attenders);
 
 
-                //途中で挿入した内容の順番を保持するために、各idを振りなおす修正関数
-                function idxModify(array_id_val,target_modify) {
-                    var modified_values = array_id_val
-                        .sort(function (val1, val2) {
-                            if (val1 < val2) return -1;
-                            if (val1 > val2) return 1;
-                            return 0;
-                        });
-                    target_modify.each(function (i) {
-                        $(this).eq(0).attr("value", modified_values[i]);
-//               console.log($(this).eq(0));
-                    });
-                }
 
-                //ajaxでpostする関数 引数はurlのパラメータ、コントローラのメソッド、コンソールログに乗せる関数の名称、データの順
-                function postAjax(id,address,nameMethod="",data={}){
-                    $.ajax({
-                        type: "post",
-                        url: "/gijiro/proceedings/"+address+"/" + id,
+                $(document).on("keyup",".attender-name",function(){
 
-                        data: data,
-                        //通信失敗
-                        error: function ( XMLHttpRequest, textStatus, errorThrown,) {
-                            console.log(nameMethod+"失敗しました");
-                            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
-                            console.log("textStatus     : " + textStatus);
-                            console.log("errorThrown    : " + errorThrown.message);
 
-                        },
-                        //ajax通信成功
-                        success : function(response) {
-                            console.log(nameMethod+"成功しました");
-//                            console.log(response.id_result);
+
+
+                    $(".attender-name").autocomplete({
+                        source: attenders,
+//                        autoFocus: true,
+                        delay: 500,
+                        minLength: 1,
+
+                        select:function(e,ui){
+                            $(this).val(ui.item.label);
+                            var attender_idx = $(this).closest("td").attr("id").match(/[0-9]+/);//自分のテーブルデータ(td)のid番号を取得
+                            $("#Attender"+attender_idx+"Belongs").val(ui.item.belongs);//所属項目に値を入れる
+                            return false;
                         }
                     });
-                }
+
+                    //ajaxで検索かける用。レスポンスが遅かったり不具合があったりで不採用
+//                var keyword = $(this).val();
+//                availableTags = new Array();
+//
+//                $.ajax({
+//                    'type': 'get',
+//                    'dataType': 'json',
+//                    'url': 'gijiro/proceedings/autoSearch?query=' + keyword,
+//                    'success': function(data) {
+//                        if (data != '') {
+//
+//                            availableTags = data;
+//
+//                            $('.attender-name').autocomplete({
+//                                source: availableTags,
+//                                autoFocus: true,
+//                                delay: 500,
+//                                minLength: 2
+//
+//                            });
+//
+//                        }
+//                    },
+//                    'error': function(XMLHttpRequest, textStatus, errorThrown) {
+//                            console.log("失敗しました");
+//                            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+//                            console.log("textStatus     : " + textStatus);
+//                            console.log("errorThrown    : " + errorThrown.message);
+//                    }
+//                });
+                });
+
+
+
 
 
                 //参加者追加共通関数
@@ -126,7 +146,7 @@
                         format_attender=
                             "<td id=\"attender-record"+idx_cols+"\">\n" +
                             "<button type=\"button\" class=\"btn add-btn add-btn-attender\">+</button>\n" +
-                            "  <button type=\"button\" class=\"btn remove-btn remove-attender\">-</button>\n" +
+                            "<button type=\"button\" class=\"btn remove-btn remove-attender\">-</button>\n" +
                             "<label for=\"Attender"+idx_cols+"AttenderName\"></label><input name=\"data[Attender]["+idx_cols+"][attender_name]\" size=\"5\" class=\"attender-name add-attender attender_"+idx_cols+"\" type=\"text\"  id=\"Attender"+idx_cols+"AttenderName\">                    </td>",
                         format_belongs="<td id=\"belongs-record"+idx_cols+"\">\n" +
                             "<input name=\"data[Attender]["+idx_cols+"][belongs]\" size=\"5\" " +

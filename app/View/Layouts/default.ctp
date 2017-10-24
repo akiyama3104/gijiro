@@ -48,7 +48,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
     echo $this->Html->script( 'jquery-ui.min' );
     echo $this->Html->script('bootstrap.min');
     echo $this->Html->script('gijiro-layout');
-    echo $this->Html->script('gijiro-form');
+//    echo $this->Html->script('gijiro-form');
 
     ?>
 <!--    <script-->

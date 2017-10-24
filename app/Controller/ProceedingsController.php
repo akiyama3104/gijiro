@@ -9,6 +9,7 @@
 App::uses("AppController","Controller");
 class ProceedingsController extends AppController{
     public $helpers =array("Html","Form" );
+    public $uses=array("Proceeding","User","Attender","CategoriesProceeding","Category");
     public $components=array(
         "Session",
         "Paginator",
@@ -20,25 +21,41 @@ class ProceedingsController extends AppController{
         "Util"   //共通して使いたい変数などを載せている
     );
 
-    public $uses=array("Proceeding","User","CategoryList","Category","Heading","Content","Attender");
+
     public function beforeFilter(){
         parent::beforeFilter();
+
+
+
 
     }
 
 
-    public function  add($id=null){
-        $content_type=$this->Util->getContentType();//会議内容の種類をセットする
-        $type_id=$this->Util->getType();//会議種類をセットする
 
-        $categories=$this->Category->find("list",array("fields"=>array("id","category")));
-        $this->set(compact("id","type_id","content_type","categories"));
+
+
+    public function  add($id=null){
+        $content_type=$this->Proceeding->getContentType();//会議内容の種類をセットする
+        $type_id=$this->Proceeding->getType();//会議種類をセットする
+        $json_attender=$this->Attender->jsonizeAttender();
+        $categories=$this->Category->getCategory();
+        $this->set(compact("id","type_id","content_type","categories","json_attender"));
 
         if ( $this->request->is("post")  ){
+//            var_dump($this->request->data);
+
+
+//            foreach ($this->request->data["Attender"] as $attender){
+//
+//
+//            }
+
 
 
 
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
+                var_dump($this->Proceeding->sql());
+
                 $this->Session->setFlash("Success");
 
                 $this->redirect(array("action"=>"edit",$this->Proceeding->id));
@@ -66,12 +83,7 @@ class ProceedingsController extends AppController{
                 $this->header("Content-Type: application/json");
 
                 return json_encode(compact("HeadingId","ContentId"));
-            }else{
-                $this->Session->setFlash("Failed");
             }
-        }else{
-            $this->Session->setFlash("Failed");
-
         }
 
 
@@ -90,9 +102,6 @@ class ProceedingsController extends AppController{
 
             return json_encode(compact("ContentId"));
 
-        } else {
-            $this->Session->setFlash("Failed");
-
         }
 
     }
@@ -100,7 +109,7 @@ class ProceedingsController extends AppController{
 
     public function addAttender(){
 
-        $req=$this->request;
+
         if (!$this->request->is("ajax") ){
             throw new BadRequestException();
         }
@@ -111,9 +120,6 @@ class ProceedingsController extends AppController{
             $this->header("Content-Type: application/json");
 
             return json_encode(compact("AttenderId"));
-
-        }else{
-            $this->Session->setFlash("Failed");
 
         }
         $this->Util->addForm();
@@ -137,9 +143,9 @@ class ProceedingsController extends AppController{
         );
 
         $proceeding=$this->Proceeding->find("first", $options);
-        $content_type=$this->Util->getContentType();//会議内容の種類をセットする
-        $type_id=$this->Util->getType();//会議種類をセットする
-        $categories=$this->Category->find("list",array("fields"=>array("id","category")));
+        $content_type=$this->Proceeding->getContentType();//会議内容の種類をセットする
+        $type_id=$this->Proceeding->getType();//会議種類をセットする
+        $categories=$this->Category->getCategory();
         $this->set(compact("proceeding","type_id","content_type","category","categories"));
     }
     public function edit($id=null){
@@ -148,16 +154,20 @@ class ProceedingsController extends AppController{
 
         $this->Proceeding->id=$id;
         if($this->request->is("get")){
-
+            $uid = $this->Auth->user()["id"];//ユーザ-idのみ取得
             $this->request->data=$this->Proceeding->read();
-            $content_type=$this->Util->getContentType();//会議内容の種類をセットする
-            $type_id=$this->Util->getType();//会議種類をセットする
-            $categories=$this->Category->find("list",array("fields"=>array("id","category")));
-            $this->set(compact("type_id","content_type","categories"));
+            $content_type=$this->Proceeding->getContentType();//会議内容の種類をセットする
+            $type_id=$this->Proceeding->getType();//会議種類をセットする
+
+
+            $this->header("Content-Type: application/json");
+            $json_attender=$this->Attender->jsonizeAttender();//id,belongs,nameをjson形式で返す
+
+            $categories=$this->Category->getCategory();
+            $this->set(compact("type_id","content_type","categories","uid","json_attender"));
 
         }else{
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
-//                var_dump($this->Proceeding->sql());
                 $this->Session->setFlash("編集成功しました");
 
                 $this->redirect(array("action"=>"view",$id));
@@ -208,6 +218,77 @@ class ProceedingsController extends AppController{
 
     }
 
+
+//    public function autoSearch($param){
+//
+//        $this->layout = false;
+//
+//
+//        $this->autoRender = false;
+//        $data = '';
+//        $json = '';
+//
+//        // Ajax以外の通信の場合
+//        if (!$this->request->is('ajax')) {
+//            throw new BadRequestException();
+//        }
+//        $data=["し","っ","ぱ","い"];
+//        $this->header("Content-Type: application/json");
+//        $json = json_encode(compact("data"));  // Json形式に
+//
+//        return $json;
+//
+//
+////        if($this->request->is("ajax")){
+////            $this->response->type('json');
+////            $this->autoLayout = false;
+////            $key =$this->data["param1"];
+////            $attenders=$this->Attender->find("all",array("fields"=>array("attender_name"),"conditions"=>array("Attender.attender_name like "=>"%"+$key)));
+////            $arr_attender=[];
+////            $this->autoRender = false;
+////            $this->header("Content-Type: application/json");
+////            foreach ($attenders as $i => $attender ){
+////                $arr_attender[]= $attender["attender_name"];
+////            }
+////        $key ="add";//"list",array("fields"=>"attender_name"));
+////        $attenders=$this->Attender->find("all",array("fields"=>"attender_name","id",));
+////        $arr_attender=$attenders;
+////        foreach ($attenders as $i => $attender ){
+////            $arr_attender[]= $attender["Attender"]["attender_name"];
+////        }
+//
+//
+//          //  return json_encode(compact("arr_attender"));
+////        }else{
+////            throw new BadRequestException();
+////        }
+////        $a = array(
+////            'HPI',
+////            'Kyosho',
+////            'Losi',
+////            'Tamiya',
+////            'Team Associated',
+////            'Team Durango',
+////            'Traxxas',
+////            'Yokomo'
+////        );
+////
+////        $b = array();
+////
+////        if($this->request->data['param1']){
+////            $w = $this->request->data['param1'];
+////            foreach($a as $i){
+////                if(stripos($i, $w) !== FALSE){
+////                    $b[] = $i;
+////                }
+////            }
+////            echo json_encode($b);
+////        }
+////        else{
+////            echo json_encode($b);
+////        }
+//
+//    }
 
 }
 ?>

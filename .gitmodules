@@ -7,3 +7,6 @@
 [submodule "app/Plugin/Search"]
 	path = app/Plugin/Search
 	url = git://github.com/CakeDC/search.git
+[submodule "jQuery-Autocomplete"]
+	path = jQuery-Autocomplete
+	url = https://github.com/devbridge/jQuery-Autocomplete.git

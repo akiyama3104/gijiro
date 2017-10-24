@@ -29,7 +29,7 @@ class SearchformBehavior extends ModelBehavior {
     $conditions = array("DATE(Proceeding.".$data["column"].")".$from_to." DATE(?)"=>array($data["name"]));
     return $conditions;
     }
-    //子テーブルの親IDを取得する
+    //子テーブルの親IDを取得する 引数１：検索キーワードとカラム,モデルインスタントと、モデル名
     public  function searchParentKeys(Model $model,$searchs=array(),$options) {
     $parent_keys = array();
     $parent_col="Proceeding.id";

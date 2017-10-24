@@ -47,5 +47,8 @@ class Category extends AppModel {
         )
 
     );
+    public function getCategory(){
+        return $this->find("list",array("fields"=>"category"));
+    }
 
 }

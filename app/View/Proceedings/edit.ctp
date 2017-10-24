@@ -11,7 +11,7 @@
 
 <?php $editData=$this->request->data;?>
 <?php $dateOption = array('empty' => array('day' => date(''), 'month' => date(''), 'year' => date('')));//次回開催時間などの初期値?>
-<?=debug($editData);?>
+
 
 <ul>
     <?=$this->Form->create("Proceeding",array("action"=>"edit"));?>
@@ -83,11 +83,83 @@
 
     <li><?= $this->Form->end("保存");?></li>
 </ul>
-<?=$this->form->postLink('削除',array('action'=>'delete', $editData["Proceeding"]["id"]),array("class"=>array("btn btn-danger")),'本当に削除しますか?');?>
 
+<?php //暫定処理。記事を作成したユーザーのみが削除できる.
+
+if( $uid ==$this->request->data["User"]["id"]){
+    echo $this->form->postLink('削除',array('action'=>'delete', $editData["Proceeding"]["id"]),array("class"=>array("btn btn-danger")),'本当に削除しますか?');
+ } ?>
 
 <script>
+    var availableTags = [
+
+
+
+
+    ];
     $(function() {
+        $(document).ready( function() {
+            var json_attenders =<?= $json_attender?>,
+            attenders=[],
+            attenderIds=[],
+                belongs=[];
+//           $.each( json_attenders , function (i,el) {
+//                attenders.push(el["Attender"]["attender_name"]);
+//                attenderIds.push(el["Attender"]["id"]);
+//                belongs.push(el["Attender"]["belongs"]);
+//            });
+                console.log(json_attenders);
+
+
+
+            $(document).on("keyup",".attender-name",function(){
+
+
+
+
+                $(".attender-name").autocomplete({
+                    source: json_attenders,
+                    autoFocus: true,
+                    delay: 250,
+                    minLength: 2
+                });
+
+                //ajaxで検索かける用。レスポンスが遅かったり不具合があったりで不採用
+//                var keyword = $(this).val();
+//                availableTags = new Array();
+//
+//                $.ajax({
+//                    'type': 'get',
+//                    'dataType': 'json',
+//                    'url': 'gijiro/proceedings/autoSearch?query=' + keyword,
+//                    'success': function(data) {
+//                        if (data != '') {
+//
+//                            availableTags = data;
+//
+//                            $('.attender-name').autocomplete({
+//                                source: availableTags,
+//                                autoFocus: true,
+//                                delay: 500,
+//                                minLength: 2
+//
+//                            });
+//
+//                        }
+//                    },
+//                    'error': function(XMLHttpRequest, textStatus, errorThrown) {
+//                            console.log("失敗しました");
+//                            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+//                            console.log("textStatus     : " + textStatus);
+//                            console.log("errorThrown    : " + errorThrown.message);
+//                    }
+//                });
+            });
+
+
+
+
+            });
 
 
         //途中で挿入した内容の順番を保持するために、各idを振りなおす修正関数
@@ -109,7 +181,6 @@
         // 3:コンソールログに乗せる関数の名称、4:データ、5:データタイプ、
         // 6:非同期通信か否かの順
         function postAjax(id,address,data,type="html",async=true){
-            console.log(id,address,data,type,async);
             return $.ajax({
                 type: "post",
                 url: "/gijiro/proceedings/"+address+"/" + id,
@@ -158,10 +229,10 @@
                     $("[id^=attender-record]").map(
                         function () {return parseInt($(this).attr("id").match(/[0-9]+/),10)}))+1,//追加するのカラムのidx
                 current_idx= add_triger.closest("td").attr("id").match(/[0-9]+/),//現在のidx(挿入する際に必要)
-                val_id_cols =id_values["AttenderId"],//Math.max.apply(null,array_val_cols)+1, //参加者id値の最大値+1
+                val_id_cols =id_values["AttenderId"],//echo $AttenderId?>参加者id値の最大値+1
                 array_val_cols=$(".HideAttenderId").map(function(){return parseInt($(this).val(),10);}),//参加者idの配列
                 format_attender=
-                    "<td id=\"attender-record"+idx_cols+"\">\n" +
+                    "<td id=\"attender-record"+idx_cols+"\">\n" +//"+val_id_cols+"
                     "<input type=\"hidden\" name=\"data[Attender]["+idx_cols+"][id]\" class=\"HideAttenderId\" value=\""+val_id_cols+"\" id=\"Attender"+idx_cols+"Id\">" +
                     "<button type=\"button\" class=\"btn add-btn add-btn-attender\">+</button>\n" +
                     "  <button type=\"button\" class=\"btn remove-btn remove-attender\">-</button>\n" +

@@ -8,7 +8,7 @@
 App::uses("AppController","Controller");
 //App::uses("Pa")
 class UsersController extends AppController{
-    public $uses=array("Proceeding","User","Attender");
+    public $uses=array("Proceeding","User","Attender","CategoriesProceeding","Category");
     public $components =array(
         "Session",
         "Paginator",
@@ -37,11 +37,12 @@ class UsersController extends AppController{
         parent::beforeFilter();//親もbeforeFilterを使えるようにする
 
 
-//        $this->Auth->allow("register","login");
 
 
 
     }
+
+
 
     //ログイン後のリダイレクトページ
     public function index(){
@@ -52,14 +53,16 @@ class UsersController extends AppController{
         $this->Proceeding->unbindModel(array("hasMany"=>array("Heading")));
         $proceedings=$this->Paginator->paginate($this->Proceeding,$conditions);
 
-        $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));
-        $type_id=$this->Util->getType();
-        $this->set(compact("proceedings","user","user_id","type_id") );
+        $user_id=$this->Proceeding->User->find("list",array("fields"=>array("id","username")));//投稿者一覧で検索するために取得
+        $type_id=$this->Proceeding->getType();//会議内容の種類取得
+        $this->set(compact("proceedings","user","user_id","type_id","categories") );
 
     }
     public function register(){
+        $this->User->create();
         //reqestがpostデータ&&ユーザー追加成功したら
         if($this->request->is("post")&&$this->User->save($this->request->data)){
+            debug($this->User->sql());
             $this->Auth->login();
             $this->redirect(array("controller"=>"Users","action"=>"index"));
 
