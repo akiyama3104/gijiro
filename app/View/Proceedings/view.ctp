@@ -8,6 +8,7 @@
 ?>
 
 <h2>議事録詳細画面</h2>
+
 <ul>
     <li><h2>議題：<?= h($proceeding["Proceeding"]["title"]);?></h2></li>
     <li>投稿者：<?= h($proceeding["User"]["username"]);?></li>

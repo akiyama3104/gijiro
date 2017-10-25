@@ -48,7 +48,6 @@ class ProceedingsController extends AppController{
             //参加者がテーブルに存在するかチェックし、いない場合、新たに追加する。
             //返り値はそれらの参加者の主キーのベクトルである。
             $attenders_id=$this->Attender->addAttender($this->request->data["Attender"]);
-
             $this->request->data["Attender"]["Attender"]=$attenders_id;
 
 
@@ -60,7 +59,7 @@ class ProceedingsController extends AppController{
                 $this->redirect(array("action"=>"edit",$this->Proceeding->id));
             }else{
                 $this->Session->setFlash("Failed");
-                echo json_encode(compact("id_result"));
+
             }
         }
     }

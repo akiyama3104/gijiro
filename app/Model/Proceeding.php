@@ -23,7 +23,7 @@ class Proceeding extends AppModel{
         array("name"=>"contents","type"=>"query","method"=>"searchContents"),
         array("name"=>"category","type"=>"query","method"=>"searchCategories"),
         //habtm検索用
-        array('name' => 'attender', 'type' => 'subquery', 'method' => 'searchAttender', 'field' => 'Proceeding.id'),
+        array('name' => 'attender', 'type' => 'subquery', 'method' => 'searchAttender', "presetType"=>"value",'field' => 'Proceeding.id'),
         array('name' => 'category', 'type' => 'subquery', 'method' => 'searchCategory', 'field' => 'Proceeding.id'),
 
     );

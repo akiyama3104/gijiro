@@ -31,7 +31,7 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
         <?php echo $this->Form->create("Proceeding", array("url"=>array("controller"=>"users","action"=>"index"))); ?>
         <fieldset>
 
-            <?=$this->Form->input("keyword",array( "label"=>"検索キーワード（タイトル、投稿者、参加者、場所、補足）"));?>
+            <?=$this->Form->input("keyword",array( "label"=>"検索キーワード（タイトル、投稿者、場所、補足）"));?>
             <?=$this->Form->input("mt_type",array("label"=>"会議する部署は？","options" => $type_id,"empty"=>""));?>
             <button type="button" class="btn btn-primary hide-button">詳細に検索したい</button>
             <div class="hide-target">
@@ -44,12 +44,11 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
             <?=$this->Form->input("user_id",array("label"=>"投稿者名","class"=>"span12","options"=>$user_id,"empty"=>""));?>
 
             <p>
-            <?=$this->Form->input("attender",array("label"=>"参加者", "class"=>"span12",'type' => 'select', 'multiple' => 'checkbox',"options"=>$attenders,"empty"=>""));?>
+            <?=$this->Form->input("attender",array("label"=>"参加者", "class"=>"span12" ,"options"=>$attenders,"empty"=>""));?>
             </p>
-
-                <p>
-                    <?=$this->Form->input("category",array("label"=>"カテゴリ", "class"=>"span12",'type' => 'select', 'multiple' => 'checkbox',"options"=>$categories,"empty"=>""));?>
-                </p>
+            <p>
+             <?=$this->Form->input("category",array("label"=>"カテゴリ", "class"=>"span12",'type' => 'select', 'multiple' => 'checkbox',"options"=>$categories,"empty"=>""));?>
+            </p>
             <p>開催日期間検索
             <?= $this->Form->input("from_hold_date", array("label"=>"from","type" => "text","class"=>"datepicker")) ?>
             <span>～</span>

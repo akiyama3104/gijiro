@@ -59,17 +59,17 @@ class UsersController extends AppController{
         $attenders=$this->Attender->find("list",array("fields"=>array("id","attender_name")));
         $this->set(compact("proceedings","user","user_id","type_id","categories","attenders","categories") );
 
+
     }
     public function register(){
         $this->User->create();
         //reqestがpostデータ&&ユーザー追加成功したら
         if($this->request->is("post")&&$this->User->save($this->request->data)){
-            debug($this->User->sql());
+
             $this->Auth->login();
             $this->redirect(array("controller"=>"Users","action"=>"index"));
 
-        }
-
+       }
     }
     public function login(){
 
