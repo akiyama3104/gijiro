@@ -184,17 +184,17 @@ class Proceeding extends AppModel{
                 $conditions["OR"][]=array("Proceeding.title like"=> "%".$key."%");
                 $conditions["OR"][]=array("Proceeding.suppl"=>"%".$key."%");
 
-                $attender_conditions["OR"][]=array("Attender.attender_name like"=> "%".$key."%");
+//                $attender_conditions["OR"][]=array("Attender.attender_name like"=> "%".$key."%");
                 //あいまい検索かつOR検索
             }
-            $attenders_option=array("model"=>$this->Attender,"model_name"=>"AttendersProceeding");//検索オプション
-            //Attenderは孫テーブルなので、子テーブル("model_name"=>"Attender")と親との外部キーをとるように設定
-            foreach($this->searchParentKeys($attender_conditions, $attenders_option) as $parentKey){
-                $conditions["OR"][]=$parentKey;
-            }
+//            $attenders_option=array("model"=>$this->Attender,"model_name"=>"AttendersProceeding");//検索オプション
+//            //Attenderは孫テーブルなので、子テーブル("model_name"=>"Attender")と親との外部キーをとるように設定
+//            foreach($this->searchParentKeys($attender_conditions, $attenders_option) as $parentKey){
+//                $conditions["OR"][]=$parentKey;
+//            }
 
 
-            $conditions["OR"][] =$this->searchParentKeys($attender_conditions,$attenders_option);
+//            $conditions["OR"][] =$this->searchParentKeys($attender_conditions,$attenders_option);
         }
         return $conditions;
     }

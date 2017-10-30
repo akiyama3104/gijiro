@@ -7,11 +7,14 @@
  */
 
 ?>
-ようこそ：<?=h($user["username"]);?>さん
-<?= $this->Html->link("ログアウト","logout");?>
+
+
+<?php $user=$this->Session->read("Auth.User"); //ユーザー情報読み込み?>
+
+
 
 <!--投稿者であるユーザーidも送付する-->
-<?= $this->Html->link("投稿する",array("controller"=>"proceedings","action"=>"add",$user["id"])); ?>
+
 <?php
 
 
@@ -26,8 +29,7 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
     //ハイライトの設定。
 ?>
 
-<div class="span3">
-    <div class="well" >
+    <div class="well form_search_index" >
         <?php echo $this->Form->create("Proceeding", array("url"=>array("controller"=>"users","action"=>"index"))); ?>
         <fieldset>
 
@@ -41,51 +43,65 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
 
             <?=$this->Form->input("next_place",array("label"=>"次回開催場所"));?>
 
-            <?=$this->Form->input("user_id",array("label"=>"投稿者名","class"=>"span12","options"=>$user_id,"empty"=>""));?>
+            <?=$this->Form->input("user_id",array("label"=>"投稿者名","class"=>"span4","options"=>$user_id,"empty"=>""));?>
 
             <p>
-            <?=$this->Form->input("attender",array("label"=>"参加者", "class"=>"span12" ,"options"=>$attenders,"empty"=>""));?>
+            <?=$this->Form->input("attender",array("label"=>"参加者", "class"=>"span4" ,"options"=>$attenders,"empty"=>""));?>
             </p>
             <p>
              <?=$this->Form->input("category",array("label"=>"カテゴリ", "class"=>"span12",'type' => 'select', 'multiple' => 'checkbox',"options"=>$categories,"empty"=>""));?>
             </p>
-            <p>開催日期間検索
-            <?= $this->Form->input("from_hold_date", array("label"=>"from","type" => "text","class"=>"datepicker")) ?>
-            <span>～</span>
-            <?= $this->Form->input("to_hold_date", array("label"=>"to","type" => "text","class"=>"datepicker")) ?>
+            <p>
+                <span class="input-group date date_time_pick" >
+                <?= $this->Form->input("from_hold_date", array("label"=>"開催日期間検索","type"=>"text","div"=>false)); ?>
+                <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+                </span>
+                ～
+                <span class="input-group date date_time_pick" >
+                <?= $this->Form->input("to_hold_date", array("label"=>false,"type"=>"text","div"=>false)); ?>
+                <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+                </span>
             </p>
-            <p>次回開催日期間検索
-            <?= $this->Form->input("from_next_hold", array("label"=>"from","type" => "text","class"=>"datepicker")) ?>
-            <span>～</span>
-            <?= $this->Form->input("to_next_hold", array("label"=>"to","type" => "text","class"=>"datepicker")) ?>
+            <p>
+
+                <span class="input-group date date_time_pick" >
+                <?= $this->Form->input("from_next_hold", array("label"=>"次回開催日期間検索","type"=>"text","div"=>false)); ?>
+                <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+                </span>
+                ～
+                <span class="input-group date date_time_pick" >
+                <?= $this->Form->input("to_next_hold", array("label"=>false,"type"=>"text","div"=>false)); ?>
+                <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+                </span>
+
             </p>
             <?= $this->Form->input("post_date", array("label"=>"投稿日","type" => "text","class"=>"datepicker")) ?>
             </div>
-            <?php echo $this->Form->end("検索"); ?>
+            <?php echo $this->Form->end(array("label"=>"検索","class"=>array("btn", "btn-lg","btn-success"))); ?>
 
 
         </fieldset>
 
     </div>
-</div>
 
-<article>
+
+<article class="list_proceeding row">
     <h2>議事録一覧</h2>
 
     <div class="row-fluid">
 
-    <div class="span9">
+
         <table class="table">
             <tr>
-                <th><?= $this->Paginator->sort("User.id","ID");?></th>
-                <th><?= $this->Paginator->sort("Proceeding.title","タイトル");?></th>
-                <th><?= $this->Paginator->sort("Proceeding.created","投稿日時");?></th>
+                <th><?= $this->Paginator->sort("Proceeding.title","タイトル順");?></th>
+                <th><?= $this->Paginator->sort("Proceeding.created","投稿日時順");?></th>
 
             </tr>
         </table>
+    </div>
 <?php foreach ($proceedings as $proceeding): ?>
 
-<section id="post_<?=h($proceeding["Proceeding"]["id"]) ?>">
+<section id="post_<?=h($proceeding["Proceeding"]["id"]) ?> span3">
         <?php $title=$this->Html->link( $proceeding["Proceeding"]["title"],array("controller"=>"proceedings","action"=>"view",$proceeding["Proceeding"]["id"]));?>
     <h2><?=$this->Text->highlight($title,$highlight_words,$highlight_option); ?></h2>
     <ul>
@@ -114,8 +130,4 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
 </article>
 
 
-
-
-</div>
-</div>
 

@@ -26,9 +26,7 @@ class UsersController extends AppController{
     public $paginate = array(
         "limit"=> 10,
 
-//        "order"=> array(
-//            "Proceeding.start_time" => "asc"
-//        )
+
     );
 
 
@@ -36,7 +34,8 @@ class UsersController extends AppController{
 
         parent::beforeFilter();//親もbeforeFilterを使えるようにする
 
-
+        $this->Auth->allow("login");
+        $this->Auth->allow("register");
 
 
 
@@ -46,6 +45,7 @@ class UsersController extends AppController{
 
     //ログイン後のリダイレクトページ
     public function index(){
+
         $user=$this->Auth->user();
 
         $this->Prg->commonProcess();//検索データのバリデーション
@@ -57,11 +57,13 @@ class UsersController extends AppController{
         $type_id=$this->Proceeding->getType();//会議内容の種類取得
         $categories=$this->Category->getCategory();
         $attenders=$this->Attender->find("list",array("fields"=>array("id","attender_name")));
-        $this->set(compact("proceedings","user","user_id","type_id","categories","attenders","categories") );
+        $this->set(compact("proceedings","user_id","type_id","categories","attenders","categories") );
 
 
     }
     public function register(){
+        $this->Auth->authError = false;
+        $this->layout= "before_login";
         $this->User->create();
         //reqestがpostデータ&&ユーザー追加成功したら
         if($this->request->is("post")&&$this->User->save($this->request->data)){
@@ -72,7 +74,7 @@ class UsersController extends AppController{
        }
     }
     public function login(){
-
+        $this->layout= "before_login";
         if($this->request->is("post")){
            if( $this->Auth->login() ){
                 return  $this->redirect("index");

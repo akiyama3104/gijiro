@@ -11,7 +11,7 @@ class  User extends  AppModel{
 //    public $actsAs = array('Acl' => array('type' => 'both'));
 //    public  $belongsTo = array('Group');
     public  $validate =array(
-      "usrname" => array(
+      "username" => array(
         array(
             "rule"=> "isUnique",//ユニークであること
             "message"=>"既に使用されています。"
@@ -39,12 +39,7 @@ class  User extends  AppModel{
     /**
      * @return array
      */
-    public function sql(){//sqlログを出力するメソッド
-        $sql = $this->getDataSource()->getLog();
 
-        $this->log($sql);
-        return $sql;
-    }
 
 
     public function beforeSave($options=array()){ //ユーザー保存する前に、パスワードをハッシュ化する

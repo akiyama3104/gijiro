@@ -32,36 +32,43 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<?php
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css('cake.generic');
+//		echo $this->Html->css('cake.generic');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
-    echo $this->Html->css('bootstrap.min');
-    echo $this->Html->css('bootstrap-responsive');
-    echo $this->Html->css('bootstrap-grid.min');
-    echo $this->Html->css('bootstrap-reboot.min');
-    echo $this->Html->css('jquery-ui.theme.min');
-    echo $this->Html->css('jquery-ui.min');
-    echo $this->Html->css('jquery-ui.structure.min');
-    echo $this->Html->script( 'jquery-3.2.1.min' );
-    echo $this->Html->script( 'jquery-ui.min' );
-    echo $this->Html->script('bootstrap.min');
-    echo $this->Html->script('gijiro-layout');
-    echo $this->Html->script("popper");
+        echo $this->Html->css('bootstrap.min');
+        echo $this->Html->css('bootstrap-responsive');
+        echo $this->Html->css('bootstrap-grid.min');
+        echo $this->Html->css('bootstrap-reboot.min');
+        echo $this->Html->css('jquery-ui.theme.min');
+        echo $this->Html->css('jquery-ui.min');
+        echo $this->Html->css('jquery-ui.structure.min');
+        echo $this->Html->css('layout');
+        echo $this->Html->css('bootstrap-datetimepicker.min');
+        echo $this->Html->script( 'jquery-3.2.1.min' );
+        echo $this->Html->script( 'jquery-ui.min' );
+        echo $this->Html->script('bootstrap.min');
+        echo $this->Html->script('gijiro-layout');
+        echo $this->Html->script("popper");
+//        echo $this->Html->script("moment-min");
+//        echo $this->Html->script("moment-with-locales-min");
+        echo $this->Html->script("bootstrap-datetimepicker.min");
+
+
 
 //    echo $this->Html->script('gijiro-form');
     ?>
-
-<!--    <script-->
-<!--            src="https://code.jquery.com/jquery-3.2.1.min.js"-->
-<!--            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="-->
-<!--            crossorigin="anonymous"></script>-->
 </head>
 <body>
 	<div id="container">
 		<div id="header">
-			<h1><?php echo $this->Html->link('Home', '/'); ?></h1>
+            <nav class="nav_header"><span class="to_home"><?php echo $this->Html->link('Home', '/'); ?></span>
+            <span class="to_add"><?= $this->Html->link("投稿する",array("controller"=>"proceedings","action"=>"add",$this->Session->read("Auth.User.id"))); ?></span>
+            </nav>
+            <div class="notification">   <span class="msg_wellcome" >ようこそ：<?=h($this->Session->read("Auth.User.username"));?>さん</span>
+                <span class="to_logout"><?= $this->Html->link("ログアウト",array("controller"=>"users","action"=>"logout"));?></span></div>
+            <h1>Gijiro!</h1>
 		</div>
 		<div id="content">
 
@@ -81,6 +88,9 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 			</p>
 		</div>
 	</div>
+
+
+
 	<?php echo $this->element('sql_dump'); ?>
     <script>
 

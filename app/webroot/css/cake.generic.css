@@ -136,11 +136,13 @@ div.actions h3 {
 
 /** Tables **/
 table {
+	table-layout: fixed;
+	width: 80%;
 	border-right:0;
 	clear: both;
 	color: #333;
 	margin-bottom: 10px;
-	width: 100%;
+
 }
 th {
 	border:0;
@@ -159,12 +161,19 @@ th a.asc:after {
 th a.desc:after {
 	content: ' ⇡';
 }
+tabel tr td{
+	width: 100%;
+}
 table tr td {
-	padding: 6px;
+	width: 20%;
+	padding: 3px;
 	text-align: left;
 	vertical-align: top;
 	border-bottom:1px solid #ddd;
+
 }
+
+
 table tr:nth-child(even) {
 	background: #f9f9f9;
 }

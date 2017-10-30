@@ -9,7 +9,7 @@
 App::uses("AppController","Controller");
 class ProceedingsController extends AppController{
     public $helpers =array("Html","Form" );
-    public $uses=array("Proceeding","User","Attender","CategoriesProceeding","Category","Content");
+    public $uses=array("Proceeding","User","Attender","CategoriesProceeding", "Heading","Category","Content");
     public $components=array(
         "Session",
         "Paginator",
@@ -54,11 +54,11 @@ class ProceedingsController extends AppController{
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
 
 
-                $this->Session->setFlash("Success");
+                $this->Session->setFlash("記事保存完了");
 
-                $this->redirect(array("action"=>"edit",$this->Proceeding->id));
+                return $this->redirect(array("action"=>"edit",$this->Proceeding->id));
             }else{
-                $this->Session->setFlash("Failed");
+                return $this->Session->setFlash("記事保存失敗");
 
             }
         }
@@ -67,12 +67,9 @@ class ProceedingsController extends AppController{
 
     //見出しを追加して、見出しid、記事内容idを返す。
     public  function addHeading(){
-
-
-        if (!$this->request->is("ajax") ){
-            throw new BadRequestException();
-        }
-
+         if (!$this->request->is("ajax") ){
+             throw new BadRequestException();
+         }
         if($this->Heading->save($this->request->data)){
             $HeadingId=$this->Heading->getInsertID();
             if($this->Content->save(array("Content"=>array("heading_id"=>$HeadingId)))){
@@ -82,8 +79,9 @@ class ProceedingsController extends AppController{
 
                 return json_encode(compact("HeadingId","ContentId"));
             }
-        }
 
+
+        }
 
     }
     public  function addContent(){
@@ -105,26 +103,26 @@ class ProceedingsController extends AppController{
     }
 
 
-    public function addAttender(){
-
-
-        if (!$this->request->is("ajax") ){
-            throw new BadRequestException();
-        }
-
-        if($this->Attender->save($this->request->data)){
-            $AttenderId=$this->Attender->getInsertID();
-            $this->autoRender = false;
-            $this->header("Content-Type: application/json");
-
-            return json_encode(compact("AttenderId"));
-
-        }
-        $this->Util->addForm();
-
-
-    }
-
+//    public function addAttender(){
+//
+//
+//        if (!$this->request->is("ajax") ){
+//            throw new BadRequestException();
+//        }
+//
+//        if($this->Attender->save($this->request->data)){
+//            $AttenderId=$this->Attender->getInsertID();
+//            $this->autoRender = false;
+//            $this->header("Content-Type: application/json");
+//
+//            return json_encode(compact("AttenderId"));
+//
+//        }
+//        $this->Util->addForm();
+//
+//
+//    }
+//
 
 
 
@@ -148,21 +146,15 @@ class ProceedingsController extends AppController{
     }
     public function edit($id=null){
 
-
-
         $this->Proceeding->id=$id;
         if($this->request->is("get")){
-            $uid = $this->Auth->user()["id"];//ユーザ-idのみ取得
             $this->request->data=$this->Proceeding->read();
             $content_type=$this->Content->getContentType();//会議内容の種類をセットする
             $type_id=$this->Proceeding->getType();//会議種類をセットする
-
-
             $this->header("Content-Type: application/json");
             $json_attender=$this->Attender->jsonizeAttender();//id,belongs,nameをjson形式で返す
-
             $categories=$this->Category->getCategory();
-            $this->set(compact("type_id","content_type","categories","uid","json_attender"));
+            $this->set(compact("type_id","content_type","categories","json_attender"));
 
         }else{
 
