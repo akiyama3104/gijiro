@@ -170,12 +170,22 @@ table {
     margin-bottom: 10px;
     width: 100%;
 }
+
+
 th {
     border:0;
     border-bottom:2px solid #555;
     text-align: left;
     padding:4px;
 }
+
+
+tbody{
+    overflow-x: auto;
+    width: auto;
+    /*white-space: nowrap;*/
+}
+
 th a {
     display: block;
     padding: 2px 4px;
@@ -192,19 +202,13 @@ table tr td {
     text-align: left;
     vertical-align: top;
     border-bottom:1px solid #ddd;
+    width: 10%;
 
 }
-
-
-
-
-table tr td.row_explain{
+table .row_explain{
 
     width: 15%;
 }
-
-
-
 
 table tr:nth-child(even) {
     background: #f9f9f9;

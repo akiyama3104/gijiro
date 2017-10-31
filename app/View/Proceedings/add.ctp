@@ -90,7 +90,6 @@
         </ul>
     </li>
     <li ><h3>補足：</h3><?=$this->Form->input("suppl",array("label"=>false));?></li>
-
     <li><?= $this->Form->end(array("label"=>"議事録開始！" ,"class"=>array("btn-success","btn-lg","btn")));?></li>
 
 </ul>
@@ -152,18 +151,14 @@
             .hide()
             .fadeIn();
         $(add_triger).nextFocusAttender();//フォーカスを次の項目に移動。(gijiro-layoutに関数を記載)
-
-
-
-
         return false;
     }
+
     //参加者追加
     $(document).on("keydown",".add-attender",function (e) {
         if (event.shiftKey) {
             if (e.keyCode === 13) {
                 addAttender($(this));
-
                 return false;
             }
         }
@@ -229,9 +224,6 @@
             .hide()
             .fadeIn();
         $(this).nextFocusHeading();//フォーカスを次の項目に移動。(gijiro-layoutに関数を記載)
-
-
-
         return false;// ページをリロードしないようにする
     });
     //見出し削除
@@ -264,9 +256,6 @@
                     idx_content= Math.max.apply(null , $(this).closest(".inner_content").children().map(function (i,el) {
                         return parseInt($(this).attr("class").match(/[0-9]+/),10)}))+1,//コンテンツの最大idx
                     idx_Heading= $(this).parents(".heading").attr("id").match(/[0-9]+/),//見出しのidx
-//                                array_val_contents=$(".HideContentId").map(function (index, el){return parseInt($(this).val(),10); }),
-//                                id_val_content =Math.max.apply(null,array_val_contents)+1, //ページ内最大のコンテンツid値。これをイテレートさせて追加記事を作る次第
-
                     format=
                         "<li class=\"contents content_"+idx_content+"\">\n" +
                         "<label for=\"Heading"+idx_Heading+"Content"+idx_content+"Content\">Shift+Enterで項目追加</label>" +

@@ -65,19 +65,23 @@ $(function () {
 
     $.fn.nextFocusHeading=function () {
         this.closest("[id^=heading_]").next().find(".extension-heading ").focus();
+        return true;
     };
     $.fn.prevFocusHeading=function () {
         this.closest("[id^=heading_]").prev().find(".extension-heading ").focus();
+        return true;
     };
 
 
     $.fn.nextFocusAttender= function () {
-        console.log(this.closest("td").next().find(".add-attender"));
+
         this.closest("td").next().find(".add-attender").focus();
+        return true;
     };
     $.fn.prevFocusAttender= function () {
 
         this.closest("td").prev().find(".add-attender").focus();
+        return true;
     };
     //フォームを追加した際の、フォーカス遷移 end//
 

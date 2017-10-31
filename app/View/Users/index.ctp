@@ -110,9 +110,18 @@ if(isset($this->request->data["Proceeding"]["keyword"])){//ハイライトさせ
         <li>場所：<?=$this->Text->highlight(h($proceeding["Proceeding"]["place"]),$highlight_words,$highlight_option);?></li>
         <li>会議種類：<?= $type_id[$proceeding["Proceeding"]["type"]];?>        </li>
         <li>参加者：
-            <?php foreach($proceeding["Attender"] as $attender) :?>
-                <?=$this->Text->highlight( h($attender["attender_name"]),$highlight_words,$highlight_option);?>
-            <?php endforeach;?>
+            <?php foreach($proceeding["Attender"] as $i => $attender): ?>
+
+                <?php if($i < 4): //参加者が5人以上なら省略。 ?>
+                    <span><?=$this->Text->highlight( h($attender["attender_name"]),$highlight_words,$highlight_option)?></span>
+
+                <?php else: ?>
+
+                    <span><?= ("…"); ?></span>
+                    <?php break; ?>
+
+                <?php  endif;?>
+           <?php endforeach; ?>
         </li>
         <li>カテゴリ：<?php foreach($proceeding["Category"] as $category) :?>
                 <?=$this->Text->highlight( h($category["category"]),$highlight_words,$highlight_option);?>

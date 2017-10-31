@@ -33,7 +33,7 @@ class ProceedingsController extends AppController{
 
 
 
-
+    //addページにて議事録を追加
     public function  add($id=null){
         $content_type=$this->Content->getContentType();//会議内容の種類をセットする
         $type_id=$this->Proceeding->getType();//会議種類をセットする
@@ -42,8 +42,6 @@ class ProceedingsController extends AppController{
         $this->set(compact("id","type_id","content_type","categories","json_attender"));
 
         if ( $this->request->is("post")  ){
-
-
 
             //参加者がテーブルに存在するかチェックし、いない場合、新たに追加する。
             //返り値はそれらの参加者の主キーのベクトルである。
@@ -54,11 +52,11 @@ class ProceedingsController extends AppController{
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
 
 
-                $this->Session->setFlash("記事保存完了");
+                //$this->Session->setFlash("記事保存完了","good");
 
                 return $this->redirect(array("action"=>"edit",$this->Proceeding->id));
             }else{
-                return $this->Session->setFlash("記事保存失敗");
+                return $this->Session->setFlash("記事保存失敗","bad");
 
             }
         }
@@ -79,10 +77,7 @@ class ProceedingsController extends AppController{
 
                 return json_encode(compact("HeadingId","ContentId"));
             }
-
-
         }
-
     }
     public  function addContent(){
 
@@ -101,28 +96,6 @@ class ProceedingsController extends AppController{
         }
 
     }
-
-
-//    public function addAttender(){
-//
-//
-//        if (!$this->request->is("ajax") ){
-//            throw new BadRequestException();
-//        }
-//
-//        if($this->Attender->save($this->request->data)){
-//            $AttenderId=$this->Attender->getInsertID();
-//            $this->autoRender = false;
-//            $this->header("Content-Type: application/json");
-//
-//            return json_encode(compact("AttenderId"));
-//
-//        }
-//        $this->Util->addForm();
-//
-//
-//    }
-//
 
 
 
@@ -168,19 +141,14 @@ class ProceedingsController extends AppController{
 
 
             if($this->Proceeding->saveAll($this->request->data,array("deep"=>true))){
-                $this->Session->setFlash("編集成功しました");
+               // $this->Session->setFlash("記事保存完了","good");
 
                 $this->redirect(array("action"=>"view",$id));
 
             }else{
-                $this->Session->setFlash("編集失敗しました");
-
-
+                //$this->Session->setFlash("記事保存失敗","bad");
             }
         }
-
-
-
     }
     public function delete($id){
         if($this->request->is("get")){
@@ -189,10 +157,10 @@ class ProceedingsController extends AppController{
         if ($this->request->is("post")){
             if($this->Proceeding->delete($id)){
 
-                $this->Session->setFlash("削除しました。");
+                //$this->Session->setFlash("削除しました。");
 
             }else{
-                $this->Session->setFlash("削除失敗しました。");
+                //$this->Session->setFlash("削除失敗しました。");
             }
             $this->redirect("/");
         }
@@ -218,7 +186,7 @@ class ProceedingsController extends AppController{
 
     }
 
-
+//  オートコンプリートをajaxで検索をかけて実装する。遅い、不具合等があるため除外。
 //    public function autoSearch($param){
 //
 //        $this->layout = false;
@@ -228,11 +196,9 @@ class ProceedingsController extends AppController{
 //        $data = '';
 //        $json = '';
 //
-//        // Ajax以外の通信の場合
 //        if (!$this->request->is('ajax')) {
 //            throw new BadRequestException();
 //        }
-//        $data=["し","っ","ぱ","い"];
 //        $this->header("Content-Type: application/json");
 //        $json = json_encode(compact("data"));  // Json形式に
 //
@@ -262,17 +228,6 @@ class ProceedingsController extends AppController{
 ////        }else{
 ////            throw new BadRequestException();
 ////        }
-////        $a = array(
-////            'HPI',
-////            'Kyosho',
-////            'Losi',
-////            'Tamiya',
-////            'Team Associated',
-////            'Team Durango',
-////            'Traxxas',
-////            'Yokomo'
-////        );
-////
 ////        $b = array();
 ////
 ////        if($this->request->data['param1']){
@@ -289,6 +244,5 @@ class ProceedingsController extends AppController{
 ////        }
 //
 //    }
-
 }
 ?>

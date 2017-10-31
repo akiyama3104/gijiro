@@ -31,7 +31,7 @@
     <li><h3>開催場所：</h3><?=$this->Form->input("place",array("label"=>false));?></li>
     <li><h3>会議目的：</h3><?=$this->Form->input("agenda",array("label"=>false));?></li>
     <li><table class="Attenders-table  table table-bordered table-responsive">
-            <tr class="attenders-row"><td class="row_explain"><h3>参加者：(Shift+Enterで追加）</h3></td>
+            <tr class="attenders-row"><th class="row_explain"><h3>参加者：(Shift+Enterで追加）</h3></th>
                 <?php foreach($editData["Attender"] as $i=> $attender):?>
                     <td id="attender-record<?=$i?>">
                         <?=$this->Form->hidden("Attender.".$i.".id",array("class"=>"HideAttenderId"));//更新するため主キー設定?>
@@ -41,7 +41,7 @@
                     </td>
                 <?php endforeach; ?>
             </tr>
-            <tr class="belongs-row"><td class="row_explain"><h3>所属：</h3></td>
+            <tr class="belongs-row"><th class="row_explain"><h3>所属：</h3></th>
                 <?php foreach($editData["Attender"] as $i=> $attender):?>
                     <td id="belongs-record<?=$i?>">
                         <?=$this->Form->input("Attender.".$i.".belongs",array("type"=>"text","size"=>"5" ,"label"=>false, "class"=>array("belong","add-belong","allow-enter","add-attender"),"div"=>false));?>
@@ -212,10 +212,10 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
                 return res;
 
             }).fail(function (XMLHttpRequest, textStatus, errorThrown) { //通信失敗
-//                console.log(nameMethod + "失敗しました");
-//                console.log("XMLHttpRequest : " + XMLHttpRequest.status);
-//                console.log("textStatus     : " + textStatus);
-//                console.log("errorThrown    : " + errorThrown.message);
+                console.log(nameMethod + "失敗しました");
+                console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+                console.log("textStatus     : " + textStatus);
+                console.log("errorThrown    : " + errorThrown.message);
             })["responseJSON"];//レスポンス部分のキー
         }
         function removeAjax(id,address,nameMethod="",data={}){
@@ -224,10 +224,10 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
 //                console.log(nameMethod+"成功しました");
                 })
                 .fail(function (XMLHttpRequest, textStatus, errorThrown) { //通信失敗
-//                console.log(nameMethod + "失敗しました");
-//                console.log("XMLHttpRequest : " + XMLHttpRequest.status);
-//                console.log("textStatus     : " + textStatus);
-//                console.log("errorThrown    : " + errorThrown.message);
+                console.log(nameMethod + "失敗しました");
+                console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+                console.log("textStatus     : " + textStatus);
+                console.log("errorThrown    : " + errorThrown.message);
 
 
             });
@@ -271,7 +271,7 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
         $(document).on("keydown",".add-attender",function (e) {
             if (event.shiftKey) {
                 if (e.keyCode === 13) {
-                    console.log("成功");
+
                     addAttender($(this));
 
                     return false;
@@ -349,9 +349,8 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
                 .fadeIn();
 
             var array_heading_val=$(".HideHeadingId").map(function (index, el){return parseInt($(this).val(),10); });
-            console.log(array_heading_val);
-            idModify(array_heading_val,$(".HideHeadingId"));
-            //id修正
+
+            idModify(array_heading_val,$(".HideHeadingId"));//id修正
 
             $(this).nextFocusHeading();//フォーカスを次の項目に移動。(gijiro-layoutに関数を記載)
             return false;
@@ -427,8 +426,6 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
                 $(this).closest(".contents").fadeOut(function () {
                     $(this).remove();
                 });
-
-
                 return false;
             }
         });
