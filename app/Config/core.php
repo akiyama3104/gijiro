@@ -88,6 +88,7 @@
 /**
  * Application wide charset encoding
  */
+
 	Configure::write('App.encoding', 'UTF-8');
 
 /**
