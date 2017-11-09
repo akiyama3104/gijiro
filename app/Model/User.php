@@ -6,17 +6,14 @@
  * Time: 17:37
  */
 App::uses("AppModel","Model");
-class  User extends  AppModel{
-
-//    public $actsAs = array('Acl' => array('type' => 'both'));
-//    public  $belongsTo = array('Group');
+class  User extends  AppModel
+{
     public  $validate =array(
       "username" => array(
         array(
-            "rule"=> "isUnique",//ユニークであること
+            "rule"=> "isUnique",
             "message"=>"既に使用されています。"
         ),
-
         array(
             "rule"=>"notBlank",
             "message"=>"必須項目です。"
@@ -32,38 +29,14 @@ class  User extends  AppModel{
                 "message"=>"パスワードは4文字以上20文字以内にしてください。"
             )
         )
-
-
     );
 
-    /**
-     * @return array
-     */
-
-
-
-    public function beforeSave($options=array()){ //ユーザー保存する前に、パスワードをハッシュ化する
+    public function beforeSave($options=array())
+    { //ユーザー保存する前に、パスワードをハッシュ化する
         $this->data["User"]["password"]=AuthComponent::password($this->data["User"]["password"]);
         return true;
 
     }
-//
-//        public function parentNode() {
-//            if (!$this->id && empty($this->data)) {
-//                return null;
-//            }
-//            if (isset($this->data['User']['group_id'])) {
-//                $groupId = $this->data['User']['group_id'];
-//            } else {
-//                $groupId = $this->field('group_id');
-//            }
-//            if (!$groupId) {
-//                return null;
-//            } else {
-//                return array('Group' => array('id' => $groupId));
-//            }
-//        }
-
 
 
 }

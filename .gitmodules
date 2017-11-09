@@ -10,3 +10,6 @@
 [submodule "jQuery-Autocomplete"]
 	path = jQuery-Autocomplete
 	url = https://github.com/devbridge/jQuery-Autocomplete.git
+[submodule "TwitterBootstrap"]
+	path = TwitterBootstrap
+	url = git://github.com/slywalker/TwitterBootstrap

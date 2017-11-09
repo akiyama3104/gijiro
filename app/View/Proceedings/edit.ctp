@@ -66,14 +66,11 @@
                <ul class="inner_content">
                     <?php foreach($heading["Content"] as $j => $content):?>
                     <li class="contents content_<?=$j?>">
-
-
                         <?= $this->Form->input("Heading.".$i.".Content.".$j.".content",array("class"=>array("form-extension","extension-content"),"rows"=>"3","label"=>"Shift+Enterで項目追加","div"=>false));?>
                         <?=$this->Form->hidden("Heading.".$i.".Content.".$j.".id",array("class"=>"HideContentId"));//更新、削除するため主キー設定?>
                         <?=$this->Form->input("Heading.".$i.".Content.".$j.".status",array("options"=>array("fixed"=>"決定","task"=>"課題"),"type"=>"radio","legend"=>false,"style"=>"float:none;","div"=>"radio-horizontal"));?>
                         <span><button class="btn  btn-danger remove-btn remove-content" type="button">削除</button></span>
                     </li>
-
                     <?php endforeach;?>
                 </ul>
                 <div class="zone-btn"><span><button class="btn btn-lg btn-primary add-btn add-heading" type="button">見出し追加</button> </span><span><button class="btn btn-danger remove-btn remove-heading" type="button">見出し削除</button></span></div>
