@@ -187,7 +187,6 @@
  * Note: The final cache file name will then be `prefix_cachefilename`.
  */
 	//Configure::write('Cache.viewPrefix', 'prefix');
-
 /**
  * Session configuration.
  *
@@ -226,6 +225,7 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
+
 	Configure::write('Session', array(
 		'defaults' => 'database',
         "cookie"=>"SID",
