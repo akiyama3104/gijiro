@@ -110,6 +110,7 @@
  * included primarily as a development convenience - and
  * thus not recommended for production applications.
  */
+
 	//Configure::write('App.baseUrl', env('SCRIPT_NAME'));
 
 /**
