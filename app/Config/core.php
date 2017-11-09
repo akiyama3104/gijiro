@@ -226,6 +226,7 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
+
 	Configure::write('Session', array(
 		'defaults' => 'database',
         "cookie"=>"SID",
@@ -241,7 +242,6 @@
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
 	Configure::write('Security.cipherSeed', '3104');
-
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
  * Will append a query string parameter containing the time the file was modified. This is
