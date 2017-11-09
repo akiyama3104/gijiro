@@ -225,7 +225,6 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
-
 	Configure::write('Session', array(
 		'defaults' => 'database',
         "cookie"=>"SID",
@@ -251,7 +250,6 @@
  * timestamping regardless of debug value.
  */
 	Configure::write('Asset.timestamp', true);
-
 /**
  * Compress CSS output by removing comments, whitespace, repeating tags, etc.
  * This requires a/var/cache directory to be writable by the web server for caching.
@@ -259,6 +257,7 @@
  *
  * To use, prefix the CSS link URL with '/ccss/' instead of '/css/' or use HtmlHelper::css().
  */
+
 	//Configure::write('Asset.filter.css', 'css.php');
 
 /**
