@@ -242,7 +242,6 @@
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
 	Configure::write('Security.cipherSeed', '3104');
-
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
  * Will append a query string parameter containing the time the file was modified. This is
@@ -253,7 +252,6 @@
  */
 
 	Configure::write('Asset.timestamp', true);
-
 /**
  * Compress CSS output by removing comments, whitespace, repeating tags, etc.
  * This requires a/var/cache directory to be writable by the web server for caching.
@@ -261,6 +259,7 @@
  *
  * To use, prefix the CSS link URL with '/ccss/' instead of '/css/' or use HtmlHelper::css().
  */
+
 	//Configure::write('Asset.filter.css', 'css.php');
 
 /**
