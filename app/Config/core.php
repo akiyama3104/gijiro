@@ -225,6 +225,7 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
+
 	Configure::write('Session', array(
 		'defaults' => 'database',
         "cookie"=>"SID",
@@ -249,6 +250,7 @@
  * Set to `true` to apply timestamps when debug > 0. Set to 'force' to always enable
  * timestamping regardless of debug value.
  */
+
 	Configure::write('Asset.timestamp', true);
 
 /**
