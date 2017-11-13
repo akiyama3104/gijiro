@@ -46,7 +46,7 @@
                     <td id="belongs-record<?=$i?>">
                         <?=$this->Form->input("Attender.".$i.".belongs",array("type"=>"text","size"=>"5" ,"label"=>false, "class"=>array("belong","add-belong","allow-enter","add-attender"),"div"=>false));?>
                     </td>
-                 <?endforeach;?>
+                 <?php endforeach;?>
             </tr>
     </table></li>
 
@@ -426,9 +426,6 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
                 return false;
             }
         });
-
-
-
 
     });
 </script>

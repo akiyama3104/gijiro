@@ -33,7 +33,8 @@ if (!defined('DS')) {
  * The full path to the directory which holds "app", WITHOUT a trailing DS.
  */
 if (!defined('ROOT')) {
-	define('ROOT', DS.'gijiro'.DS.'');
+	define('ROOT', DS.'var'.DS.'www'.DS.'html'.DS.'gijiro'.DS.'');
+//	define('ROOT', '');
 }
 
 /**
@@ -64,7 +65,7 @@ if (!defined('CONFIG')) {
  * The following line differs from its sibling
  * /lib/Cake/Console/Templates/skel/webroot/index.php
  */
-//define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
+define('CAKE_CORE_INCLUDE_PATH', ROOT . 'lib');
 
 /**
  * This auto-detects CakePHP as a composer installed library.

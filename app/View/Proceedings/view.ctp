@@ -21,12 +21,12 @@ $status_color=array("fixed"=>"text-success","task"=>"text-danger" ,""=>"text-mut
             <tr><td class="row_explain"><h3>参加者：</h3></td>
                 <?php foreach ($proceeding["Attender"] as $attender ) : ?>
                 <td><?= h($attender["attender_name"]);?></td>
-                <?endforeach;?>
+                <?php endforeach;?>
             </tr>
             <tr><td class="row_explain"><h3>所属：</h3></td>
                 <?php foreach ($proceeding["Attender"] as $attender ) : ?>
                     <td><?= h($attender["belongs"]);?></td>
-                <?endforeach;?>
+                <?php endforeach;?>
             </tr>
         </table>
     </li>
@@ -58,8 +58,7 @@ $status_color=array("fixed"=>"text-success","task"=>"text-danger" ,""=>"text-mut
     <li><h3>補足：</h3><?= h($proceeding["Proceeding"]["suppl"]);?></li>
     <li><h3>投稿日時：</h3><?= h($proceeding["Proceeding"]["created"]);?></li>
     <li><h3>更新日時：</h3><?= h($proceeding["Proceeding"]["modified"]);?></li>
-    
-</ul>
-<p><?=$this->Html->link("編集",array('controller'=>'proceedings',"action"=>"edit",$proceeding["Proceeding"]["id"])
-        ,array("class"=>array("btn", "btn-lg","btn-success")));?></p>
-
+    </ul>
+<p>
+    <?php echo   $this->Html->link("編集",array('controller'=>'proceedings',"action"=>"edit",$proceeding["Proceeding"]["id"]),array("class"=>array("btn", "btn-lg","btn-success")));?>
+</p>
