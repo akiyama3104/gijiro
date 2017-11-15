@@ -83,6 +83,17 @@ $(function () {
         this.closest("td").prev().find(".add-attender").focus();
         return true;
     };
+
+    $.fn.nextFocusCategory= function () {
+
+        this.closest("li").next().find(".add-category").focus();
+        return true;
+    };
+    $.fn.prevFocusCategory= function () {
+
+        this.closest("li").prev().find(".add-category").focus();
+        return true;
+    };
     //フォームを追加した際の、フォーカス遷移 end//
 
 });

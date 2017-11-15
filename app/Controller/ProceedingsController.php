@@ -47,7 +47,9 @@ class ProceedingsController extends AppController
             //返り値はそれらの参加者の主キーのベクトルである。
             $attenders_id=$this->Attender->addAttender($this->request->data['Attender']);
             $this->request->data['Attender']['Attender']=$attenders_id;
-
+            //カテゴリも同様に行なう.
+            $category_id = $this->Category->addCategory($this->request->data["Category"]);
+            $this->request->data["Category"]["Category"] = $category_id;
 
             if ($this->Proceeding->saveAll($this->request->data,array('deep'=>true))){
                 //$this->Session->setFlash('記事保存完了','good');
@@ -55,7 +57,6 @@ class ProceedingsController extends AppController
                 return $this->redirect(array('action'=>'edit',$this->Proceeding->id));
             } else {
                 return $this->Session->setFlash('記事保存失敗','bad');
-
             }
         }
     }
@@ -132,9 +133,9 @@ class ProceedingsController extends AppController
             //返り値はそれらの参加者の主キーのベクトルである。
             $attenders_id=$this->Attender->addAttender($this->request->data['Attender']);
             $this->request->data['Attender']['Attender']=$attenders_id;
-
-
-
+            //カテゴリも同様
+            $categories_id=$this->Category->addCategory($this->request->data['Category']);
+            $this->request->data['Category']['Category']=$categories_id;
             if($this->Proceeding->saveAll($this->request->data,array('deep'=>true))){
                // $this->Session->setFlash('記事保存完了','good');
 

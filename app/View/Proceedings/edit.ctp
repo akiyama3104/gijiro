@@ -31,7 +31,8 @@
     <li><h3>開催場所：</h3><?=$this->Form->input("place",array("label"=>false));?></li>
     <li><h3>会議目的：</h3><?=$this->Form->input("agenda",array("label"=>false));?></li>
     <li><table class="Attenders-table  table table-bordered table-responsive">
-            <tr class="attenders-row"><th class="row_explain"><h3>参加者：(Shift+Enterで追加）</h3></th>
+            <tr class="attenders-row">
+                <th class="row_explain"><h3>参加者：(Shift+Enterで追加）</h3></th>
                 <?php foreach($editData["Attender"] as $i=> $attender):?>
                     <td id="attender-record<?=$i?>">
                         <?=$this->Form->hidden("Attender.".$i.".id",array("class"=>"HideAttenderId"));//更新するため主キー設定?>
@@ -51,8 +52,32 @@
     </table></li>
 
     <li><h3>会議部署：</h3><?=$this->Form->input("type",array("options" => $type_id,"type"=>"radio",));?></li>
-    <li><h3>カテゴリ選択：</h3><?=$this->Form->input("Category",array("options"=>$categories,'type' => 'select','multiple'=> 'checkbox',"label"=>false)); ?>
-<!--    --><?//=$this->Form->hidden("CategoryList.id"); ?>
+    <li class="inner_content">
+        <h3>カテゴリ(社内外会議、定例会など）：</h3>
+        <ul class="category ">
+            <?php foreach($editData["Category"] as $i=> $category):?>
+            <li class="left-form"id="category-record<?=$i;?>">
+                <datalist id="category-list">
+                    <?php foreach ($categories as $category):?>
+                        <option value="<?=$category;?>"></option>
+                    <?php endforeach;?>
+                </datalist>
+                <?=$this->Form->hidden("Category.{$i}.id",array("class"=>"HideCategoryId"));//更新するため主キー設定?>
+                <button type="button" class="btn add-btn add-btn-category">+</button>
+                <button type="button" class="btn remove-btn remove-category">-</button>
+                <?= $this->Form->input("Category.{$i}.category",array(
+                        'type' => 'text',
+                        "div"=>false,
+                        "label"=>"",
+                        "list"=>"category-list",
+                        "class"=>array("left-form","add-category","category_{$i}")
+                    )
+                ); ?>
+
+
+            </li>
+            <?php endforeach;?>
+        </ul>
     </li>
     <li><h3>会議内容:</h3>
 
@@ -129,36 +154,6 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
                 }
             });
 
-            //ajaxで検索かける用。レスポンスが遅かったり不具合があったりで不採用
-//                var keyword = $(this).val();
-//                availableTags = new Array();
-//
-//                $.ajax({
-//                    'type': 'get',
-//                    'dataType': 'json',
-//                    'url': 'gijiro/proceedings/autoSearch?query=' + keyword,
-//                    'success': function(data) {
-//                        if (data != '') {
-//
-//                            availableTags = data;
-//
-//                            $('.attender-name').autocomplete({
-//                                source: availableTags,
-//                                autoFocus: true,
-//                                delay: 500,
-//                                minLength: 2
-//
-//                            });
-//
-//                        }
-//                    },
-//                    'error': function(XMLHttpRequest, textStatus, errorThrown) {
-//                            console.log("失敗しました");
-//                            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
-//                            console.log("textStatus     : " + textStatus);
-//                            console.log("errorThrown    : " + errorThrown.message);
-//                    }
-//                });
         });
 
 
@@ -238,11 +233,8 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
                     $("[id^=attender-record]").map(
                         function () {return parseInt($(this).attr("id").match(/[0-9]+/),10)}))+1,//追加するのカラムのidx
                 current_idx= add_triger.closest("td").attr("id").match(/[0-9]+/),//現在のidx(挿入する際に必要)
-              //  val_id_cols =id_values["AttenderId"],//echo $AttenderId?>参加者id値の最大値+1
-               // array_val_cols=$(".HideAttenderId").map(function(){return parseInt($(this).val(),10);}),//参加者idの配列
                 format_attender=
-                    "<td id=\"attender-record"+idx_cols+"\">\n" +//"+val_id_cols+"
-                   // "<input type=\"hidden\" name=\"data[Attender]["+idx_cols+"][id]\" class=\"HideAttenderId\" value=\""+val_id_cols+"\" id=\"Attender"+idx_cols+"Id\">" +
+                    "<td id=\"attender-record"+idx_cols+"\">\n" +
                     "<button type=\"button\" class=\"btn add-btn add-btn-attender\">+</button>\n" +
                     "  <button type=\"button\" class=\"btn remove-btn remove-attender\">-</button>\n" +
                     "<label for=\"Attender"+idx_cols+"AttenderName\"></label><input name=\"data[Attender]["+idx_cols+"][attender_name]\" size=\"5\" class=\"attender-name add-attender allow-enter attender_"+idx_cols+"\" type=\"text\"  id=\"Attender"+idx_cols+"AttenderName\"> " +
@@ -301,6 +293,65 @@ if( $this->Session->read("Auth.User.id") ==$this->request->data["User"]["id"]){ 
         });
 
 
+        //カテゴリ追加共通関数
+        function addCategory(add_triger){
+
+            var id = $("#ProceedingId").val(),
+                idx_cols=Math.max.apply(null ,
+                    $("[id^=category-record]").map(
+                        function () {return parseInt($(this).attr("id").match(/[0-9]+/),10)}))+1,//追加するのカラムのidx
+                current_idx= add_triger.closest("li").attr("id").match(/[0-9]+/),//現在のidx(挿入する際に必要)
+
+                format_category= "<li class=\"left-form\"id=\"category-record"+idx_cols+"\">\n" +
+                    " <datalist id=\"category-list\">"+
+                    "<?php foreach ($categories as $category):?>\n"+
+                    "<option value=\"<?=$category;?>\"></option>\n" +
+                    "<?php endforeach;?>"+
+                    "</datalist>\n" +
+                    "<button type=\"button\" class=\"btn add-btn add-btn-category\">+</button>\n" +
+                    "<button type=\"button\" class=\"btn remove-btn remove-category\">-</button>\n" +
+                    "<label for=\"Category"+idx_cols+"category\"></label>\n"+
+                    "<input name=\"data[Category]["+idx_cols+"][category]\" list=\"category-list\" class=\"left-form add-category\" type=\"text\" id=\"CategoryCategory\">"+
+                    "</li>";
+
+            $("#category-record"+current_idx).after(format_category)
+                .hide()
+                .fadeIn();
+
+            $(add_triger).nextFocusCategory();//フォーカスを次の項目に移動。
+            return false;
+        }
+
+        //カテゴリ追加
+        $(document).on("keydown",".add-category",function (e) {
+            if (event.shiftKey) {
+                if (e.keyCode === 13) {
+                    addCategory($(this));
+                    return false;
+                }
+            }
+        });
+        //カテゴリ追加2（指定セレクタや、発火イベントが違うためメソッド複製・・・・)
+        $(document).on("click",".add-btn-category",function () {
+            addCategory($(this));
+
+        });
+        //カテゴリ削除
+        $(document).on("click",".remove-category",function () {
+            var current_idx= $(this).closest("li").attr("id").match(/[0-9]+/),//カラムのidx
+                num_categories= $("[id^=category-record]").length;//カラムの数
+            if(num_categories <= 1 ) {
+                alert("カテゴリは1つ以上必要です。");
+                return false;
+            }else{
+                $(this).prevFocusCategory();//フォーカスを前の項目に移動。
+                $("#category-record"+current_idx).fadeOut(function () {
+                    $(this).remove();
+                });
+                return false;
+
+            }
+        });
 
 
         //見出し記事追加機能。cloneにすべきか考え中

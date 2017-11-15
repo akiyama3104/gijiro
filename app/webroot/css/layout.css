@@ -354,9 +354,6 @@ section[id^=post_]{
     padding: 8px 7px 21px;
      box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
      transition: .3s;
-
-
-
 }
 section[id^=post_]:hover {
     box-shadow: 0px 10px 21px rgba(0, 0, 0, 0.4);
@@ -417,7 +414,12 @@ form .input {
 form .required {
     font-weight: bold;
 }
-form .required label:after {
+/*form .required label:after {*/
+    /*color: #e32;*/
+    /*content: '*';*/
+    /*display:inline;*/
+/*}*/
+.hissu:after {
     color: #e32;
     content: '*';
     display:inline;
@@ -531,11 +533,17 @@ form .error-message {
 
 
 /*フォーム内独自指定*/
-
+.left-form{
+    float: left;
+}
 .radio-horizontal {
     float: left;
 }
+li[id^=category-record]{
+    width: 30%;
 
+
+}
 .remove-content{
     float: right;
     margin-top: 10px;

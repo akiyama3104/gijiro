@@ -51,8 +51,28 @@
             </tr>
         </table>
     </li>
-    <li><h3>会議部署：</h3><?=$this->Form->input("type",array("options" => $type_id,"type"=>"radio",));?></li>
-    <li><h3>カテゴリ選択：</h3><?=$this->Form->input("Category",array("options"=>$categories,'type' => 'select','multiple'=> 'checkbox',"label"=>false)); ?>
+    <li><h3 class="hissu">会議部署：</h3><?=$this->Form->input("type",array("options" => $type_id,"type"=>"radio",));?></li>
+    <li class="inner_content"><h3>カテゴリ(社内外会議、定例会など）：</h3>
+        <ul class="category ">
+            <li class="left-form"id="category-record0">
+                <datalist id="category-list">
+                    <?php foreach ($categories as $category):?>
+                        <option value="<?=$category;?>"></option>
+                    <?php endforeach;?>
+                </datalist>
+                <button type="button" class="btn add-btn add-btn-category">+</button>
+                <button type="button" class="btn remove-btn remove-category">-</button>
+                <?= $this->Form->input("Category.0.category",array(
+                        'type' => 'text',
+                        "div"=>false,
+                        "label"=>"",
+                        "list"=>"category-list",
+                        "class"=>array("left-form","add-category")
+                    )
+                ); ?>
+
+            </li>
+        </ul>
     </li>
 
     <li><h3>次回開催時間：</h3>
@@ -115,13 +135,10 @@
                 $(this).val(ui.item.label);
                 var attender_idx = $(this).closest("td").attr("id").match(/[0-9]+/);//自分のテーブルデータ(td)のid番号を取得
                 $("#Attender"+attender_idx+"Belongs").val(ui.item.belongs);//所属項目に値を入れる
-
                 return false;
             }
         });
     });
-
-
 
         //参加者追加共通関数
     function addAttender(add_triger){
@@ -185,6 +202,67 @@
 
         }
     });
+
+
+     //カテゴリ追加共通関数
+     function addCategory(add_triger){
+
+         var id = $("#ProceedingId").val(),
+             idx_cols=Math.max.apply(null ,
+                 $("[id^=category-record]").map(
+                     function () {return parseInt($(this).attr("id").match(/[0-9]+/),10)}))+1,//追加するのカラムのidx
+             current_idx= add_triger.closest("li").attr("id").match(/[0-9]+/),//現在のidx(挿入する際に必要)
+
+             format_category= "<li class=\"left-form\"id=\"category-record"+idx_cols+"\">\n" +
+                              " <datalist id=\"category-list\">"+
+                                     "<?php foreach ($categories as $category):?>\n"+
+                                "<option value=\"<?=$category;?>\"></option>\n" +
+                                     "<?php endforeach;?>"+
+                                 "</datalist>\n" +
+                              "<button type=\"button\" class=\"btn add-btn add-btn-category\">+</button>\n" +
+                                "<button type=\"button\" class=\"btn remove-btn remove-category\">-</button>\n" +
+                                "<label for=\"Category"+idx_cols+"category\"></label>\n"+
+                                "<input name=\"data[Category]["+idx_cols+"][category]\" list=\"category-list\" class=\"left-form add-category\" type=\"text\" id=\"CategoryCategory\">"+
+                              "</li>";
+
+         $("#category-record"+current_idx).after(format_category)
+             .hide()
+             .fadeIn();
+
+         $(add_triger).nextFocusCategory();//フォーカスを次の項目に移動。
+         return false;
+     }
+
+     //カテゴリ追加
+     $(document).on("keydown",".add-category",function (e) {
+         if (event.shiftKey) {
+             if (e.keyCode === 13) {
+                 addCategory($(this));
+                 return false;
+             }
+         }
+     });
+     //カテゴリ追加2（指定セレクタや、発火イベントが違うためメソッド複製・・・・)
+     $(document).on("click",".add-btn-category",function () {
+         addCategory($(this));
+
+     });
+     //カテゴリ削除
+     $(document).on("click",".remove-category",function () {
+         var current_idx= $(this).closest("li").attr("id").match(/[0-9]+/),//カラムのidx
+             num_categories= $("[id^=category-record]").length;//カラムの数
+         if(num_categories <= 1 ) {
+             alert("カテゴリは1つ以上必要です。");
+             return false;
+         }else{
+             $(this).prevFocusCategory();//フォーカスを前の項目に移動。
+             $("#category-record"+current_idx).fadeOut(function () {
+                 $(this).remove();
+             });
+             return false;
+
+         }
+     });
 
 
 
